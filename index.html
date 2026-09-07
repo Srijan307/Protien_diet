@@ -1,253 +1,184 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
-<link rel="manifest" href="./manifest.json">
-<title>My Protein Meal Planner</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indian Vegetarian Protein Planner</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f5f7fb;color:#111827;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-header{background:#111827;color:#fff;padding:20px 16px;position:sticky;top:0;z-index:5}h1{margin:0 0 4px;font-size:23px}.sub{color:#cbd5e1;font-size:13px}
-main{max-width:800px;margin:auto;padding:14px 14px 90px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}.tab{border:0;border-radius:999px;padding:10px 15px;background:#fff;color:#475569;font-weight:700;white-space:nowrap}.tab.active{background:#111827;color:#fff}
-.card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 2px 10px rgba(0,0,0,.05)}h2{font-size:19px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f8fafc;border-radius:14px;padding:12px}.num{font-size:21px;font-weight:800}.label,.small{font-size:12px;color:#64748b}
-input,select{width:100%;padding:12px;border:1px solid #dbe1ea;border-radius:12px;background:#fff;font-size:16px}
-.row{display:flex;gap:10px}.row>*{flex:1}.meal{border:1px solid #e2e8f0;border-radius:16px;padding:14px;margin:10px 0}.meal h3{margin:0 0 6px;font-size:16px}.meta{font-size:13px;color:#64748b;line-height:1.45}.pill{display:inline-block;background:#eef2ff;border-radius:999px;padding:4px 8px;font-size:11px;margin:8px 5px 0 0}.actions{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}.btn{border:0;border-radius:11px;padding:10px 12px;font-weight:700;background:#111827;color:#fff}.btn.secondary{background:#e5e7eb;color:#111827}.progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar{height:100%;background:#111827;width:0}.hidden{display:none}.check{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eef2f7}.check input{width:20px;height:20px}.danger{color:#b91c1c}.mealgrid{display:grid;grid-template-columns:1fr;gap:10px}@media(min-width:650px){.mealgrid{grid-template-columns:1fr 1fr}}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f5f7fa;color:#17202a}
+header{background:#17202a;color:#fff;padding:20px;text-align:center}header h1{margin:0 0 6px;font-size:24px}header p{margin:0;opacity:.8}
+.container{max-width:900px;margin:auto;padding:16px}.card{background:#fff;border-radius:14px;padding:16px;margin-bottom:16px;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+.controls{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}label{font-weight:600;font-size:14px}
+input,select,button{width:100%;padding:11px;margin-top:6px;border-radius:9px;border:1px solid #d5d8dc;font-size:15px}
+button{background:#17202a;color:#fff;border:none;cursor:pointer;font-weight:600}button.secondary{background:#eaecee;color:#17202a}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{background:#f2f4f4;border-radius:10px;padding:12px;text-align:center}.stat strong{display:block;font-size:22px}
+.progress{height:12px;background:#e5e7e9;border-radius:20px;overflow:hidden;margin-top:10px}.progress-bar{height:100%;width:0%;background:#27ae60;transition:width .3s}
+.meals{display:grid;gap:12px}.meal{border:1px solid #e5e7e9;border-radius:12px;padding:14px}.meal h3{margin:0 0 6px}
+.meta{font-size:14px;color:#566573;margin-bottom:8px}.ingredients{font-size:14px;line-height:1.5;color:#34495e}
+.badge{display:inline-block;background:#eafaf1;color:#196f3d;padding:4px 8px;border-radius:20px;font-size:12px;margin-right:5px}
+.skip-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.skip-item{padding:8px;background:#f8f9f9;border-radius:8px}.skip-item label{font-weight:normal}
+@media(max-width:600px){.controls,.stats{grid-template-columns:1fr}.skip-grid{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
-<header><h1>💪 My Protein Meal Planner</h1><div class="sub">Indian vegetarian meals • complete meals, not just ingredients</div></header>
-<main>
-<div class="tabs">
-<button class="tab active" data-tab="day">Today's Plan</button>
-<button class="tab" data-tab="meals">Meal Library</button>
-<button class="tab" data-tab="skip">Skip Foods</button>
+<header><h1>Indian Vegetarian Protein Planner</h1><p>High-protein vegetarian meals for everyday Indian eating</p></header>
+<div class="container">
+<div class="card"><h2>Your Targets</h2><div class="controls">
+<div><label>Daily Protein Target (g)</label><input id="proteinTarget" type="number" value="150"></div>
+<div><label>Daily Calories Target</label><input id="calorieTarget" type="number" value="2200"></div>
+</div></div>
+<div class="card"><h2>Daily Progress</h2><div class="stats">
+<div class="stat"><strong id="totalProtein">0</strong>Protein g</div>
+<div class="stat"><strong id="totalCalories">0</strong>Calories</div>
+<div class="stat"><strong id="mealCount">0</strong>Meals</div>
+</div><div class="progress"><div class="progress-bar" id="proteinProgress"></div></div></div>
+<div class="card"><h2>Search Meals</h2><div class="controls">
+<div><label>Search</label><input id="search" placeholder="Paneer, dal, dosa, chilla..."></div>
+<div><label>Category</label><select id="category"><option>All</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snacks</option></select></div>
+</div></div>
+<div class="card"><h2>Foods to Skip</h2><div class="skip-grid" id="skipList"></div></div>
+<div class="card"><h2>Meal Library</h2><div id="mealList" class="meals"></div></div>
 </div>
-
-<section id="day">
-<div class="card">
-<h2>🎯 Your targets</h2>
-<div class="grid">
-<div><label class="small">Protein (g)</label><input id="targetP" type="number" value="150"></div>
-<div><label class="small">Calories</label><input id="targetC" type="number" value="2200"></div>
-</div>
-</div>
-
-<div class="card">
-<div class="grid">
-<div class="stat"><div class="num" id="totalP">0g</div><div class="label">Protein</div></div>
-<div class="stat"><div class="num" id="totalC">0</div><div class="label">Calories</div></div>
-<div class="stat"><div class="num" id="leftP">150g</div><div class="label">Protein left</div></div>
-<div class="stat"><div class="num" id="leftC">2200</div><div class="label">Calories left</div></div>
-</div>
-<p class="small">Protein progress</p><div class="progress"><div id="pbar" class="bar"></div></div>
-</div>
-
-<div class="card">
-<h2>🤖 Build my full day</h2>
-<p class="small">Automatically choose complete meals to get close to your protein and calorie targets.</p>
-<div class="grid">
-<div><label class="small">Meals per day</label><select id="mealCount"><option value="3">3</option><option value="4" selected>4</option><option value="5">5</option></select></div>
-<div><label class="small">Plan style</label><select id="planStyle"><option value="balanced">Balanced</option><option value="highp">Higher protein</option><option value="lowercal">Lower calorie</option></select></div>
-</div>
-<div class="actions"><button class="btn" id="buildBtn">✨ Build my day</button><button class="btn secondary" id="clearBtn">Clear day</button></div>
-<div id="autoPlan"></div>
-</div>
-
-<div class="card"><h2>✨ Quick meal suggestions</h2><div id="suggestions"></div></div>
-<div class="card"><h2>🍽️ My meals today</h2><div id="today"></div></div>
-</section>
-
-<section id="meals" class="hidden">
-<div class="card"><h2>🍛 Meal Library</h2>
-<div class="row"><input id="mealSearch" placeholder="Search meals..."><select id="cat"><option>All</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
-</div>
-<div id="mealList" class="mealgrid"></div>
-</section>
-
-<section id="skip" class="hidden">
-<div class="card"><h2>🚫 Skip foods</h2><p class="small">Skipped foods are automatically excluded from meal suggestions and the auto planner.</p>
-<input id="skipSearch" placeholder="Search foods..."><div id="skipList"></div>
-<div class="actions"><button class="btn secondary" id="clearSkipBtn">Clear all</button></div>
-</div>
-</section>
-</main>
-
 <script>
-"use strict";
+const MEALS = [
+["Moong Dal Paneer Chilla","Breakfast",40,570,"80 g dry moong dal + 100 g paneer + vegetables + 150 g curd"],
+["Besan Paneer Chilla","Breakfast",36,550,"100 g besan + 100 g paneer + vegetables + 150 g curd"],
+["Soya Poha","Breakfast",32,470,"70 g poha + 50 g dry soya granules + vegetables + 10 g peanuts"],
+["Sattu Chilla + Curd","Breakfast",30,500,"80 g sattu + vegetables + 250 g curd"],
+["Paneer Paratha + Curd","Breakfast",33,630,"2 whole-wheat paneer parathas + 100 g paneer + 200 g curd"],
+["Greek Yogurt Protein Bowl","Breakfast",31,450,"300 g Greek yogurt + fruit + 20 g mixed seeds"],
+["Soya Upma","Breakfast",31,480,"70 g semolina + 50 g dry soya granules + vegetables"],
+["Tofu Bhurji Toast","Breakfast",30,510,"250 g tofu bhurji + 2 whole-wheat toasts + vegetables"],
+["Moong Chilla + Soya Filling","Breakfast",43,590,"80 g dry moong dal + 50 g dry soya granules + vegetables + curd"],
+["Paneer Besan Cheela","Breakfast",41,610,"100 g besan + 150 g paneer + vegetables"],
+["Paneer Stuffed Moong Dosa","Breakfast",39,560,"100 g moong dal batter + 120 g paneer stuffing + vegetables"],
+["High Protein Idli + Sambar","Breakfast",25,430,"4 idlis + 350 ml sambar + 150 g curd"],
+["Protein Dosa + Paneer Bhurji","Breakfast",38,590,"2 dosa + 120 g paneer bhurji + sambar"],
+["Adai + Curd","Breakfast",27,480,"3 mixed-lentil adai + 200 g curd"],
+["Moong Dal Dosa + Soya Bhurji","Breakfast",42,570,"2 moong dal dosa + 60 g dry soya granules + vegetables"],
+["Paneer Sandwich","Breakfast",35,540,"120 g paneer + 4 whole-wheat bread slices + vegetables"],
+["Tofu Paratha + Curd","Breakfast",31,570,"2 tofu-stuffed whole-wheat parathas + 200 g curd"],
+["Soya Stuffed Roti","Breakfast",36,520,"60 g dry soya granules + 2 whole-wheat rotis + vegetables + curd"],
+["Paneer Oats Chilla","Breakfast",34,520,"80 g oats + 120 g paneer + vegetables + curd"],
+["Protein Vegetable Uttapam","Breakfast",28,490,"3 lentil-based uttapams + vegetables + 200 g curd"],
+["Sattu Paneer Paratha","Breakfast",35,610,"2 parathas + 60 g sattu + 100 g paneer + curd"],
+["Soya Chunk Curry + Roti + Curd","Lunch",48,660,"75 g dry soya chunks + 2 rotis + 200 g curd + salad"],
+["Paneer Bhurji + Roti + Curd","Lunch",44,700,"150 g paneer + 2 rotis + 200 g curd + vegetables"],
+["Palak Paneer + Roti","Lunch",39,630,"150 g paneer + spinach gravy + 2 rotis"],
+["Tofu Curry + Rice + Curd","Lunch",38,660,"250 g tofu + 200 g cooked rice + 200 g curd"],
+["Rajma Rice + Curd","Lunch",30,600,"250 g cooked rajma + 200 g cooked rice + 200 g curd"],
+["Chole Roti + Curd","Lunch",32,620,"250 g cooked chole + 2 rotis + 200 g curd"],
+["Black Chana Masala + Roti","Lunch",31,610,"250 g cooked black chana + 2 rotis + salad + 150 g curd"],
+["Mixed Dal + Paneer + Roti","Lunch",44,700,"250 g cooked mixed dal + 100 g paneer + 2 rotis"],
+["Soya Keema + Roti","Lunch",47,630,"75 g dry soya granules + 3 rotis + vegetables"],
+["Soya Pulao + Raita","Lunch",41,670,"60 g dry soya granules + rice + 250 g curd raita"],
+["Paneer Pulao + Raita","Lunch",39,700,"150 g paneer + rice + 250 g curd raita"],
+["Dal Rice + Paneer Tikka","Lunch",43,720,"200 g cooked dal + 180 g cooked rice + 100 g paneer tikka"],
+["Soya Rajma Bowl","Lunch",46,680,"50 g dry soya + 180 g cooked rajma + 150 g cooked rice"],
+["Paneer Chole Bowl","Lunch",42,690,"150 g paneer + 200 g cooked chole + vegetables"],
+["Dal Makhani + Paneer Tikka","Lunch",43,720,"250 g dal makhani + 120 g paneer tikka + salad"],
+["Soya Biryani + Raita","Lunch",40,680,"70 g dry soya chunks + rice + 250 g curd raita"],
+["Paneer Tikka Rice Bowl","Lunch",42,650,"150 g paneer tikka + 180 g cooked rice + vegetables + curd"],
+["Rajma Paneer Rice Bowl","Lunch",43,700,"180 g rajma + 120 g paneer + 150 g cooked rice"],
+["Soya Dal Khichdi","Lunch",39,620,"50 g dry soya + dal + rice + vegetables + curd"],
+["Chole Paneer Bowl","Lunch",41,700,"200 g cooked chole + 120 g paneer + vegetables"],
+["Tofu Dal Rice Bowl","Lunch",38,650,"200 g tofu + 200 g cooked dal + 150 g rice"],
+["Paneer Rajma Wrap","Lunch",40,650,"120 g paneer + 150 g rajma + 2 whole-wheat wraps"],
+["Soya Roti Bowl","Lunch",45,640,"70 g dry soya + 2 rotis + vegetables + 200 g curd"],
+["Paneer Dal Roti Thali","Lunch",45,730,"120 g paneer + 200 g dal + 2 rotis + vegetables + curd"],
+["Dal Khichdi + Curd","Dinner",30,590,"dal-rice khichdi + 300 g curd + vegetables"],
+["Soya Tikka + Roti","Dinner",47,620,"75 g dry soya chunks + 2 rotis + salad + mint curd"],
+["Paneer Tikka + Dal","Dinner",44,660,"150 g paneer tikka + 200 g cooked dal + salad"],
+["Tofu Bhurji + Roti + Curd","Dinner",40,620,"250 g tofu + 2 rotis + 200 g curd"],
+["Dal + Paneer Bhurji + Roti","Dinner",43,680,"200 g cooked dal + 100 g paneer bhurji + 2 rotis"],
+["Rajma Paneer Bowl","Dinner",41,680,"200 g cooked rajma + 100 g paneer + 150 g cooked rice"],
+["Chana Dal + Soya Sabzi + Roti","Dinner",44,660,"200 g cooked chana dal + 50 g dry soya + 2 rotis"],
+["Soya Tofu Stir Fry + Rice","Dinner",42,650,"50 g dry soya + 200 g tofu + 150 g cooked rice + vegetables"],
+["Paneer Dal Makhani Style + Roti","Dinner",40,690,"100 g paneer + 200 g dal + 2 rotis"],
+["Soya Chilli + Fried Rice","Dinner",39,640,"60 g dry soya chunks + 180 g cooked rice + vegetables"],
+["Tofu Palak + Roti","Dinner",36,590,"250 g tofu + spinach gravy + 2 rotis"],
+["Paneer Tikka Wraps","Dinner",42,650,"150 g paneer tikka + 2 whole-wheat wraps + vegetables + curd dip"],
+["Soya Kebab + Roti","Dinner",44,610,"75 g dry soya + 2 rotis + salad + curd"],
+["Paneer Kathi Roll","Dinner",39,640,"150 g paneer + 2 whole-wheat wraps + vegetables"],
+["Tofu Tikka + Dal","Dinner",40,630,"250 g tofu tikka + 200 g cooked dal + salad"],
+["Soya Kofta Curry + Roti","Dinner",43,650,"70 g dry soya + tomato gravy + 2 rotis + curd"],
+["Paneer Kofta + Dal","Dinner",42,690,"150 g paneer kofta + 200 g cooked dal + vegetables"],
+["High Protein Dal Tadka + Paneer","Dinner",45,650,"300 g cooked dal + 120 g paneer + salad"],
+["Soya Masala Rice","Dinner",40,610,"70 g dry soya + 180 g cooked rice + vegetables"],
+["Paneer Stuffed Roti + Dal","Dinner",44,680,"2 paneer-stuffed rotis + 200 g cooked dal"],
+["Tofu Matar Curry + Roti","Dinner",35,590,"250 g tofu + peas + 2 rotis + vegetables"],
+["Soya Palak + Roti","Dinner",43,600,"70 g dry soya + spinach gravy + 2 rotis + curd"],
+["Paneer Bhurji Rice Bowl","Dinner",42,660,"150 g paneer bhurji + 180 g cooked rice + vegetables"],
+["Mixed Dal + Tofu + Roti","Dinner",41,640,"250 g cooked mixed dal + 200 g tofu + 2 rotis"],
+["Greek Yogurt + Roasted Soy Nuts","Snacks",32,430,"300 g Greek yogurt + 30 g roasted soy nuts"],
+["Sattu Protein Drink","Snacks",23,310,"60 g sattu + 300 ml milk + spices"],
+["Chana Chaat + Curd","Snacks",23,360,"200 g cooked chana + 200 g curd + vegetables"],
+["Soy Nut Chaat","Snacks",26,310,"50 g roasted soy nuts + vegetables + lemon"],
+["Paneer Tikka Snack","Snacks",30,440,"150 g paneer tikka + vegetables"],
+["Peanut Chaat + Curd","Snacks",22,400,"40 g peanuts + 250 g curd + vegetables"],
+["Hung Curd Chaat","Snacks",25,330,"300 g hung curd + vegetables + 20 g roasted chana"],
+["Soya Bhel","Snacks",24,340,"40 g dry roasted soya granules + puffed rice + vegetables + chutney"],
+["Milk + Sattu + Peanut Drink","Snacks",25,390,"300 ml milk + 50 g sattu + 15 g peanut powder"],
+["Paneer Chaat","Snacks",30,390,"150 g paneer + onion + tomato + coriander + lemon"],
+["Soya Tikka Snack","Snacks",30,350,"50 g dry soya chunks + vegetables + curd dip"],
+["Greek Yogurt + Sattu","Snacks",30,360,"250 g Greek yogurt + 40 g sattu + fruit"],
+["Roasted Chana + Curd","Snacks",24,330,"50 g roasted chana + 250 g curd"],
+["Paneer Lettuce Wraps","Snacks",28,360,"130 g paneer + lettuce + vegetables + curd dip"],
+["Tofu Chaat","Snacks",27,330,"200 g tofu + vegetables + lemon + spices"],
+["Sattu Lassi","Snacks",24,320,"60 g sattu + 300 g curd + water + spices"],
+["High Protein Dahi Bowl","Snacks",28,340,"300 g Greek yogurt + 30 g roasted chana + fruit"],
+["Paneer & Chana Chaat","Snacks",32,430,"100 g paneer + 120 g cooked chana + vegetables"],
+["Soy Nut Bhel","Snacks",28,350,"50 g roasted soy nuts + puffed rice + vegetables"],
+["Tofu Sandwich","Snacks",27,420,"180 g tofu + 3 whole-wheat bread slices + vegetables"]
+];
 
-const MEALS = [{"name": "Moong Dal Paneer Chilla", "category": "Breakfast", "protein": 40, "calories": 570, "ingredients": "80 g dry moong dal + 100 g paneer + vegetables + 150 g curd"}, {"name": "Besan Paneer Chilla", "category": "Breakfast", "protein": 36, "calories": 550, "ingredients": "100 g besan + 100 g paneer + vegetables + 150 g curd"}, {"name": "Soya Poha", "category": "Breakfast", "protein": 32, "calories": 470, "ingredients": "70 g poha + 50 g dry soya granules + vegetables + 10 g peanuts"}, {"name": "Sattu Chilla + Curd", "category": "Breakfast", "protein": 30, "calories": 500, "ingredients": "80 g sattu + vegetables + 250 g curd"}, {"name": "Paneer Paratha + Curd", "category": "Breakfast", "protein": 33, "calories": 630, "ingredients": "2 whole-wheat paneer parathas + 100 g paneer + 200 g curd"}, {"name": "Greek Yogurt Protein Bowl", "category": "Breakfast", "protein": 31, "calories": 450, "ingredients": "300 g Greek yogurt + 1 fruit + 20 g mixed seeds"}, {"name": "Soya Upma", "category": "Breakfast", "protein": 31, "calories": 480, "ingredients": "70 g semolina + 50 g dry soya granules + vegetables"}, {"name": "Tofu Bhurji Toast", "category": "Breakfast", "protein": 30, "calories": 510, "ingredients": "250 g tofu bhurji + 2 whole-wheat toasts + vegetables"}, {"name": "Moong Chilla + Soya Filling", "category": "Breakfast", "protein": 43, "calories": 590, "ingredients": "80 g dry moong dal + 50 g dry soya granules + vegetables + curd"}, {"name": "Paneer Besan Cheela", "category": "Breakfast", "protein": 41, "calories": 610, "ingredients": "100 g besan + 150 g paneer + vegetables"}, {"name": "Soya Chunk Curry + Roti + Curd", "category": "Lunch", "protein": 48, "calories": 660, "ingredients": "75 g dry soya chunks + 2 rotis + 200 g curd + salad"}, {"name": "Paneer Bhurji + Roti + Curd", "category": "Lunch", "protein": 44, "calories": 700, "ingredients": "150 g paneer + 2 rotis + 200 g curd + vegetables"}, {"name": "Palak Paneer + Roti", "category": "Lunch", "protein": 39, "calories": 630, "ingredients": "150 g paneer + spinach gravy + 2 rotis"}, {"name": "Tofu Curry + Rice + Curd", "category": "Lunch", "protein": 38, "calories": 660, "ingredients": "250 g tofu + 200 g cooked rice + 200 g curd"}, {"name": "Rajma Rice + Curd", "category": "Lunch", "protein": 30, "calories": 600, "ingredients": "250 g cooked rajma + 200 g cooked rice + 200 g curd"}, {"name": "Chole Roti + Curd", "category": "Lunch", "protein": 32, "calories": 620, "ingredients": "250 g cooked chole + 2 rotis + 200 g curd"}, {"name": "Black Chana Masala + Roti", "category": "Lunch", "protein": 31, "calories": 610, "ingredients": "250 g cooked black chana + 2 rotis + salad + 150 g curd"}, {"name": "Mixed Dal + Paneer + Roti", "category": "Lunch", "protein": 44, "calories": 700, "ingredients": "250 g cooked mixed dal + 100 g paneer + 2 rotis"}, {"name": "Soya Keema + Roti", "category": "Lunch", "protein": 47, "calories": 630, "ingredients": "75 g dry soya granules + 3 rotis + vegetables"}, {"name": "Soya Pulao + Raita", "category": "Lunch", "protein": 41, "calories": 670, "ingredients": "60 g dry soya granules + rice + 250 g curd raita"}, {"name": "Paneer Pulao + Raita", "category": "Lunch", "protein": 39, "calories": 700, "ingredients": "150 g paneer + rice + 250 g curd raita"}, {"name": "Dal Rice + Paneer Tikka", "category": "Lunch", "protein": 43, "calories": 720, "ingredients": "200 g cooked dal + 180 g cooked rice + 100 g paneer tikka"}, {"name": "Soya Rajma Bowl", "category": "Lunch", "protein": 46, "calories": 680, "ingredients": "50 g dry soya + 180 g cooked rajma + 150 g cooked rice"}, {"name": "Dal Khichdi + Curd", "category": "Dinner", "protein": 30, "calories": 590, "ingredients": "dal-rice khichdi + 300 g curd + vegetables"}, {"name": "Soya Tikka + Roti", "category": "Dinner", "protein": 47, "calories": 620, "ingredients": "75 g dry soya chunks + 2 rotis + salad + mint curd"}, {"name": "Paneer Tikka + Dal", "category": "Dinner", "protein": 44, "calories": 660, "ingredients": "150 g paneer tikka + 200 g cooked dal + salad"}, {"name": "Tofu Bhurji + Roti + Curd", "category": "Dinner", "protein": 40, "calories": 620, "ingredients": "250 g tofu + 2 rotis + 200 g curd"}, {"name": "Dal + Paneer Bhurji + Roti", "category": "Dinner", "protein": 43, "calories": 680, "ingredients": "200 g cooked dal + 100 g paneer bhurji + 2 rotis"}, {"name": "Rajma Paneer Bowl", "category": "Dinner", "protein": 41, "calories": 680, "ingredients": "200 g cooked rajma + 100 g paneer + 150 g cooked rice"}, {"name": "Chana Dal + Soya Sabzi + Roti", "category": "Dinner", "protein": 44, "calories": 660, "ingredients": "200 g cooked chana dal + 50 g dry soya + 2 rotis"}, {"name": "Soya Tofu Stir Fry + Rice", "category": "Dinner", "protein": 42, "calories": 650, "ingredients": "50 g dry soya + 200 g tofu + 150 g cooked rice + vegetables"}, {"name": "Paneer Dal Makhani Style + Roti", "category": "Dinner", "protein": 40, "calories": 690, "ingredients": "100 g paneer + 200 g dal + 2 rotis"}, {"name": "Soya Chilli + Fried Rice", "category": "Dinner", "protein": 39, "calories": 640, "ingredients": "60 g dry soya chunks + 180 g cooked rice + vegetables"}, {"name": "Tofu Palak + Roti", "category": "Dinner", "protein": 36, "calories": 590, "ingredients": "250 g tofu + spinach gravy + 2 rotis"}, {"name": "Paneer Tikka Wraps", "category": "Dinner", "protein": 42, "calories": 650, "ingredients": "150 g paneer tikka + 2 whole-wheat wraps + vegetables + curd dip"}, {"name": "Greek Yogurt + Roasted Soy Nuts", "category": "Snack", "protein": 32, "calories": 430, "ingredients": "300 g Greek yogurt + 30 g roasted soy nuts"}, {"name": "Sattu Protein Drink", "category": "Snack", "protein": 23, "calories": 310, "ingredients": "60 g sattu + 300 ml milk + spices"}, {"name": "Chana Chaat + Curd", "category": "Snack", "protein": 23, "calories": 360, "ingredients": "200 g cooked chana + 200 g curd + vegetables"}, {"name": "Soy Nut Chaat", "category": "Snack", "protein": 26, "calories": 310, "ingredients": "50 g roasted soy nuts + vegetables + lemon"}, {"name": "Paneer Tikka Snack", "category": "Snack", "protein": 30, "calories": 440, "ingredients": "150 g paneer tikka + vegetables"}, {"name": "Peanut Chaat + Curd", "category": "Snack", "protein": 22, "calories": 400, "ingredients": "40 g peanuts + 250 g curd + vegetables"}, {"name": "Hung Curd Chaat", "category": "Snack", "protein": 25, "calories": 330, "ingredients": "300 g hung curd + vegetables + 20 g roasted chana"}, {"name": "Soya Bhel", "category": "Snack", "protein": 24, "calories": 340, "ingredients": "40 g dry roasted soya granules + puffed rice + vegetables + chutney"}, {"name": "Milk + Sattu + Peanut Drink", "category": "Snack", "protein": 25, "calories": 390, "ingredients": "300 ml milk + 50 g sattu + 15 g peanut powder"}];
-const SKIP_FOODS = ["paneer", "tofu", "soy/soya", "curd", "greek yogurt", "milk", "wheat/roti", "rice", "dal", "rajma", "chole/chana", "peanuts", "seeds", "besan", "sattu"];
+const SKIP_FOODS=["paneer","tofu","soy","soya","curd","greek yogurt","milk","wheat","roti","rice","dal","rajma","chole","chana","peanuts","seeds","besan","sattu"];
+let selectedMeals=[],skippedFoods=new Set();
 
-let plan = JSON.parse(localStorage.getItem("protein_plan_v3") || "[]");
-let skipped = JSON.parse(localStorage.getItem("protein_skipped_v3") || "[]");
-
-const $ = id => document.getElementById(id);
-
-function save(){
-  localStorage.setItem("protein_plan_v3", JSON.stringify(plan));
-  localStorage.setItem("protein_skipped_v3", JSON.stringify(skipped));
-  localStorage.setItem("protein_target_p_v3", $("targetP").value);
-  localStorage.setItem("protein_target_c_v3", $("targetC").value);
+function renderSkipList(){
+ const c=document.getElementById("skipList"); c.innerHTML="";
+ SKIP_FOODS.forEach(food=>{
+  const d=document.createElement("div");d.className="skip-item";
+  d.innerHTML=`<label><input type="checkbox" value="${food}"> ${food}</label>`;
+  d.querySelector("input").addEventListener("change",e=>{
+   e.target.checked?skippedFoods.add(food):skippedFoods.delete(food); renderMeals();
+  });
+  c.appendChild(d);
+ });
 }
-
-function blocked(meal){
-  const text = (meal.name + " " + meal.ingredients).toLowerCase();
-  return skipped.some(food => text.includes(food));
+function mealShouldBeSkipped(meal){
+ const text=(meal[0]+" "+meal[4]).toLowerCase();
+ return [...skippedFoods].some(f=>text.includes(f));
 }
-
-function card(meal, index, showUse=true){
-  if(!meal || typeof meal.name !== "string") return "";
-  return '<div class="meal">'
-    + '<h3>' + meal.name + '</h3>'
-    + '<div class="meta">' + meal.ingredients + '</div>'
-    + '<span class="pill">' + meal.category + '</span>'
-    + '<span class="pill">💪 ' + meal.protein + ' g protein</span>'
-    + '<span class="pill">🔥 ' + meal.calories + ' kcal</span>'
-    + (showUse ? '<div class="actions"><button class="btn" data-add="' + index + '">＋ Use this meal</button></div>' : '')
-    + '</div>';
+function addMeal(i){selectedMeals.push(MEALS[i]);updateStats();}
+function updateStats(){
+ let p=0,c=0;selectedMeals.forEach(m=>{p+=m[2];c+=m[3]});
+ document.getElementById("totalProtein").textContent=p;
+ document.getElementById("totalCalories").textContent=c;
+ document.getElementById("mealCount").textContent=selectedMeals.length;
+ const target=Number(document.getElementById("proteinTarget").value)||1;
+ document.getElementById("proteinProgress").style.width=Math.min(p/target*100,100)+"%";
 }
-
-function totals(){
-  return plan.reduce((a,index)=>{
-    const m=MEALS[index];
-    return m ? {p:a.p+m.protein,c:a.c+m.calories} : a;
-  },{p:0,c:0});
-}
-
-function update(){
-  const t=totals(), tp=Number($("targetP").value)||150, tc=Number($("targetC").value)||2200;
-  $("totalP").textContent=t.p+"g";
-  $("totalC").textContent=Math.round(t.c);
-  $("leftP").textContent=Math.max(0,tp-t.p)+"g";
-  $("leftC").textContent=Math.max(0,tc-t.c);
-  $("pbar").style.width=Math.min(100,(t.p/tp)*100)+"%";
-  $("today").innerHTML=plan.map((idx,n)=>card(MEALS[idx],idx,false)+'<button class="btn secondary" data-remove="'+n+'">Remove</button>').join("") || '<p class="small">No meals added yet.</p>';
-  renderSuggestions();
-}
-
-function renderSuggestions(){
-  const need=(Number($("targetP").value)||150)-totals().p;
-  const list=MEALS.map((m,i)=>({m,i}))
-    .filter(x=>!blocked(x.m))
-    .sort((a,b)=>Math.abs(need-a.m.protein)-Math.abs(need-b.m.protein))
-    .slice(0,4);
-  $("suggestions").innerHTML=list.map(x=>card(x.m,x.i,true)).join("") || '<p class="small">No meals available with your skipped foods.</p>';
-}
-
 function renderMeals(){
-  const q=$("mealSearch").value.toLowerCase(), c=$("cat").value;
-  const list=MEALS.map((m,i)=>({m,i}))
-    .filter(x=>(c==="All" || x.m.category===c))
-    .filter(x=>(!q || (x.m.name+" "+x.m.ingredients).toLowerCase().includes(q)))
-    .filter(x=>!blocked(x.m));
-  $("mealList").innerHTML=list.map(x=>card(x.m,x.i,true)).join("") || '<p class="small">No matching meals.</p>';
+ const c=document.getElementById("mealList");c.innerHTML="";
+ const search=document.getElementById("search").value.toLowerCase();
+ const category=document.getElementById("category").value;
+ MEALS.forEach((m,i)=>{
+  if(mealShouldBeSkipped(m))return;
+  if(category!=="All"&&m[1]!==category)return;
+  if(search&&!(`${m[0]} ${m[4]}`.toLowerCase().includes(search)))return;
+  const d=document.createElement("div");d.className="meal";
+  d.innerHTML=`<h3>${m[0]}</h3>
+  <div class="meta"><span class="badge">${m[1]}</span><span class="badge">${m[2]} g protein</span><span class="badge">${m[3]} kcal</span></div>
+  <div class="ingredients">${m[4]}</div><br><button onclick="addMeal(${i})">Add to My Day</button>`;
+  c.appendChild(d);
+ });
 }
-
-function renderSkip(){
-  const q=$("skipSearch").value.toLowerCase();
-  $("skipList").innerHTML=SKIP_FOODS.filter(x=>x.includes(q)).map(food =>
-    '<label class="check"><input type="checkbox" data-skip="'+food+'" '+(skipped.includes(food)?"checked":"")+'> '+food+'</label>'
-  ).join("");
-}
-
-function addMeal(index){
-  if(Number.isInteger(index) && MEALS[index] && !blocked(MEALS[index])){
-    plan.push(index); save(); update();
-  }
-}
-
-function removeMeal(position){
-  if(position>=0 && position<plan.length){plan.splice(position,1);save();update();}
-}
-
-function clearPlan(){plan=[];save();$("autoPlan").innerHTML="";update();}
-
-function score(combo,tp,tc,style){
-  let p=0,c=0;
-  combo.forEach(i=>{p+=MEALS[i].protein;c+=MEALS[i].calories});
-  let s=Math.abs(p-tp)/tp*0.42 + Math.abs(c-tc)/tc*0.58;
-  if(style==="highp") s += Math.max(0,tp-p)/tp*0.35;
-  if(style==="lowercal") s += Math.max(0,c-tc)/tc*0.45;
-  return {score:s,p,c};
-}
-
-function buildDay(){
-  const tp=Number($("targetP").value)||150, tc=Number($("targetC").value)||2200;
-  const count=Number($("mealCount").value)||4, style=$("planStyle").value;
-  const available=MEALS.map((m,i)=>({m,i})).filter(x=>!blocked(x.m));
-  const groups={Breakfast:[],Lunch:[],Dinner:[],Snack:[]};
-  available.forEach(x=>groups[x.m.category].push(x.i));
-
-  let pools = count===3
-    ? [groups.Breakfast,groups.Lunch,groups.Dinner]
-    : count===4
-      ? [groups.Breakfast,groups.Lunch,groups.Snack,groups.Dinner]
-      : [groups.Breakfast,groups.Lunch,groups.Snack,groups.Snack,groups.Dinner];
-
-  if(pools.some(p=>p.length===0)){
-    $("autoPlan").innerHTML='<p class="small danger">Not enough meal choices remain after your Skip Foods selections.</p>'; return;
-  }
-
-  let best=null;
-  function walk(pos,combo){
-    if(pos===pools.length){
-      const result=score(combo,tp,tc,style);
-      if(!best || result.score<best.score) best={...result,combo:[...combo]};
-      return;
-    }
-    for(const idx of pools[pos]){
-      if(pos>0 && combo.includes(idx)) continue;
-      walk(pos+1,combo.concat(idx));
-    }
-  }
-  walk(0,[]);
-
-  if(best){
-    plan=best.combo; save();
-    $("autoPlan").innerHTML='<div class="meal"><h3>Best matching day</h3><div class="meta"><b>'+best.p+' g protein</b> • <b>'+best.c+' kcal</b></div>'
-      +best.combo.map(i=>'<div class="check">🍽️ <span>'+MEALS[i].name+' — '+MEALS[i].protein+' g • '+MEALS[i].calories+' kcal</span></div>').join("")
-      +'</div>';
-    update();
-  }
-}
-
-document.querySelectorAll(".tab").forEach(btn=>btn.addEventListener("click",()=>{
-  document.querySelectorAll("section").forEach(s=>s.classList.add("hidden"));
-  $(btn.dataset.tab).classList.remove("hidden");
-  document.querySelectorAll(".tab").forEach(b=>b.classList.remove("active"));
-  btn.classList.add("active");
-  if(btn.dataset.tab==="meals") renderMeals();
-  if(btn.dataset.tab==="skip") renderSkip();
-}));
-
-document.addEventListener("click",e=>{
-  const add=e.target.closest("[data-add]"); if(add){addMeal(Number(add.dataset.add));return;}
-  const rem=e.target.closest("[data-remove]"); if(rem){removeMeal(Number(rem.dataset.remove));return;}
-});
-
-$("mealSearch").addEventListener("input",renderMeals);
-$("cat").addEventListener("change",renderMeals);
-$("skipSearch").addEventListener("input",renderSkip);
-$("skipList").addEventListener("change",e=>{
-  if(e.target.matches("[data-skip]")){
-    const f=e.target.dataset.skip;
-    skipped=e.target.checked ? [...new Set(skipped.concat(f))] : skipped.filter(x=>x!==f);
-    save(); renderSkip(); renderMeals(); update();
-  }
-});
-$("targetP").addEventListener("change",()=>{save();update()});
-$("targetC").addEventListener("change",()=>{save();update()});
-$("buildBtn").addEventListener("click",buildDay);
-$("clearBtn").addEventListener("click",clearPlan);
-$("clearSkipBtn").addEventListener("click",()=>{skipped=[];save();renderSkip();renderMeals();update();});
-
-$("targetP").value=localStorage.getItem("protein_target_p_v3") || 150;
-$("targetC").value=localStorage.getItem("protein_target_c_v3") || 2200;
-renderMeals(); renderSkip(); update();
-
-if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+document.getElementById("search").addEventListener("input",renderMeals);
+document.getElementById("category").addEventListener("change",renderMeals);
+document.getElementById("proteinTarget").addEventListener("input",updateStats);
+document.getElementById("calorieTarget").addEventListener("input",updateStats);
+renderSkipList();renderMeals();updateStats();
 </script>
 </body>
 </html>
