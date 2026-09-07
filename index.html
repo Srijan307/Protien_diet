@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111827"><link rel="manifest" href="manifest.json">
+<title>My Protein Meal Planner</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f5f7fb;color:#111827}
+header{background:#111827;color:white;padding:22px 18px 18px;position:sticky;top:0;z-index:5}
+h1{font-size:24px;margin:0 0 5px}.sub{color:#cbd5e1;font-size:13px}
+main{max-width:760px;margin:auto;padding:14px 14px 90px}.tabs{display:flex;gap:8px;overflow:auto;margin-bottom:14px}
+.tab{border:0;border-radius:999px;padding:10px 15px;background:white;color:#475569;font-weight:700;white-space:nowrap}.tab.active{background:#111827;color:#fff}
+.card{background:#fff;border-radius:18px;padding:16px;margin:12px 0;box-shadow:0 2px 10px #0000000a}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:#f8fafc;border-radius:14px;padding:12px}.num{font-size:21px;font-weight:800}.label{font-size:12px;color:#64748b}
+input,select{width:100%;padding:12px;border:1px solid #dbe1ea;border-radius:12px;background:white;font-size:16px}
+.row{display:flex;gap:10px;align-items:center}.row>*{flex:1}.meal{border:1px solid #e2e8f0;border-radius:16px;padding:14px;margin:10px 0}.meal h3{margin:0 0 5px;font-size:16px}.meta{font-size:13px;color:#64748b;margin-bottom:8px}.pill{display:inline-block;background:#eef2ff;border-radius:999px;padding:4px 8px;font-size:11px;margin-right:4px}.actions{display:flex;gap:8px;margin-top:10px}.btn{border:0;border-radius:11px;padding:10px 12px;font-weight:700;background:#111827;color:white}.btn.secondary{background:#e5e7eb;color:#111827}.progress{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden}.bar{height:100%;background:#111827;width:0}.hidden{display:none}.small{font-size:12px;color:#64748b}.check{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid #eef2f7}.check input{width:20px;height:20px}.danger{color:#b91c1c}.mealgrid{display:grid;grid-template-columns:1fr;gap:10px}
+@media(min-width:650px){.mealgrid{grid-template-columns:1fr 1fr}}
+</style></head>
+<body>
+<header><h1>💪 My Protein Meal Planner</h1><div class="sub">Indian vegetarian meals • build your day around your protein goal</div></header>
+<main>
+<div class="tabs">
+<button class="tab active" onclick="showTab('day',this)">Today's Plan</button>
+<button class="tab" onclick="showTab('meals',this)">Meal Library</button>
+<button class="tab" onclick="showTab('skip',this)">Skip Foods</button>
+</div>
+
+<section id="day">
+<div class="card">
+<h2 style="margin-top:0">🎯 Your targets</h2>
+<div class="grid">
+<div><label class="small">Protein (g)</label><input id="targetP" type="number" value="150" onchange="saveTargets()"></div>
+<div><label class="small">Calories</label><input id="targetC" type="number" value="2200" onchange="saveTargets()"></div>
+</div>
+</div>
+<div class="card">
+<div class="grid">
+<div class="stat"><div class="num" id="totalP">0g</div><div class="label">Protein</div></div>
+<div class="stat"><div class="num" id="totalC">0</div><div class="label">Calories</div></div>
+<div class="stat"><div class="num" id="leftP">150g</div><div class="label">Protein left</div></div>
+<div class="stat"><div class="num" id="leftC">2200</div><div class="label">Calories left</div></div>
+</div>
+<p class="small">Protein progress</p><div class="progress"><div id="pbar" class="bar"></div></div>
+</div>
+<div class="card">
+<h2 style="margin-top:0">✨ Suggested day</h2>
+<p class="small">Tap “Use” to add a complete meal. Suggestions automatically avoid foods you have skipped.</p>
+<div id="suggestions"></div>
+</div>
+<div class="card"><h2 style="margin-top:0">🍽️ My meals today</h2><div id="today"></div></div>
+</section>
+
+<section id="meals" class="hidden">
+<div class="card"><h2 style="margin-top:0">🍛 Meal Library</h2>
+<div class="row"><input id="mealSearch" placeholder="Search meals..." oninput="renderMeals()"><select id="cat" onchange="renderMeals()"><option>All</option><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option></select></div>
+</div>
+<div id="mealList" class="mealgrid"></div>
+</section>
+
+<section id="skip" class="hidden">
+<div class="card"><h2 style="margin-top:0">🚫 Skip foods</h2><p class="small">Select anything you don't want. Meal suggestions will filter around these choices.</p><input id="skipSearch" placeholder="Search foods..." oninput="renderSkip()"><div id="skipList"></div>
+<div class="actions"><button class="btn secondary" onclick="clearSkip()">Clear all</button></div></div>
+</section>
+</main>
+<script>
+const meals = [["Moong Dal Paneer Chilla", "Breakfast", 38, 560, "2 moong chillas + 100 g paneer stuffing + curd"], ["Besan Paneer Chilla", "Breakfast", 35, 540, "2 besan chillas + 100 g paneer + vegetables"], ["Soya Poha", "Breakfast", 31, 460, "poha + 50 g dry soya granules + vegetables + peanuts"], ["Sattu Chilla + Curd", "Breakfast", 29, 500, "2 sattu chillas + 250 g curd"], ["Paneer Paratha + Curd", "Breakfast", 32, 620, "2 paneer parathas + 250 g curd"], ["Greek Yogurt Protein Bowl", "Breakfast", 30, 430, "300 g Greek yogurt + fruit + 20 g seeds"], ["Soya Upma", "Breakfast", 30, 470, "upma + 50 g dry soya granules + vegetables"], ["Tofu Bhurji Toast", "Breakfast", 29, 500, "200 g tofu bhurji + 2 whole-wheat toasts"], ["Soya Chunk Curry + Roti + Curd", "Lunch", 48, 650, "75 g dry soya chunks + 2 rotis + 200 g curd"], ["Paneer Bhurji + Roti + Curd", "Lunch", 44, 690, "150 g paneer + 2 rotis + 200 g curd"], ["Palak Paneer + Roti", "Lunch", 38, 620, "150 g paneer + spinach gravy + 2 rotis"], ["Tofu Curry + Rice + Curd", "Lunch", 37, 650, "250 g tofu + 200 g cooked rice + 200 g curd"], ["Rajma Rice + Curd", "Lunch", 29, 590, "250 g cooked rajma + 200 g cooked rice + 200 g curd"], ["Chole Roti + Curd", "Lunch", 31, 610, "250 g cooked chole + 2 rotis + 200 g curd"], ["Black Chana Masala + Roti", "Lunch", 30, 600, "250 g cooked black chana + 2 rotis + salad"], ["Mixed Dal + Paneer + Roti", "Lunch", 43, 690, "250 g dal + 100 g paneer + 2 rotis"], ["Soya Keema + Roti", "Lunch", 46, 620, "75 g dry soya granules + 3 rotis + vegetables"], ["Soya Pulao + Raita", "Lunch", 40, 650, "60 g dry soya + rice + 250 g curd raita"], ["Paneer Pulao + Raita", "Lunch", 38, 680, "150 g paneer + rice + 250 g curd raita"], ["Dal Khichdi + Curd", "Dinner", 29, 580, "dal-rice khichdi + 300 g curd"], ["Soya Tikka + Roti", "Dinner", 47, 610, "75 g dry soya chunks + 2 rotis + salad"], ["Paneer Tikka + Dal", "Dinner", 43, 650, "150 g paneer tikka + 200 g dal"], ["Tofu Bhurji + Roti + Curd", "Dinner", 39, 610, "250 g tofu + 2 rotis + 200 g curd"], ["Dal + Paneer Bhurji + Roti", "Dinner", 42, 670, "200 g dal + 100 g paneer bhurji + 2 rotis"], ["Rajma Paneer Bowl", "Dinner", 40, 670, "200 g rajma + 100 g paneer + rice"], ["Chana Dal + Soya Sabzi + Roti", "Dinner", 43, 650, "200 g chana dal + 50 g dry soya + 2 rotis"], ["Greek Yogurt + Roasted Soy Nuts", "Snack", 32, 420, "300 g Greek yogurt + 30 g roasted soy nuts"], ["Sattu Protein Drink", "Snack", 22, 300, "60 g sattu + 300 ml milk + spices"], ["Chana Chaat + Curd", "Snack", 22, 350, "200 g cooked chana + 200 g curd + vegetables"], ["Soy Nut Chaat", "Snack", 25, 300, "50 g roasted soy nuts + vegetables + lemon"], ["Paneer Tikka Snack", "Snack", 30, 430, "150 g paneer tikka + vegetables"], ["Peanut Chaat + Curd", "Snack", 21, 390, "40 g peanuts + 250 g curd + vegetables"]];
+let plan=JSON.parse(localStorage.getItem('meal_plan')||'[]');
+let skipped=JSON.parse(localStorage.getItem('meal_skipped')||'[]');
+const skipFoods=["chole/chana", "curd", "dal", "greek yogurt", "low-fat paneer", "milk", "paneer", "peanuts", "rajma", "rice", "seeds", "soy/soya", "tofu", "wheat/roti"];
+function showTab(id,btn){document.querySelectorAll('section').forEach(x=>x.classList.add('hidden'));document.getElementById(id).classList.remove('hidden');document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));btn.classList.add('active');if(id==='meals')renderMeals();if(id==='skip')renderSkip();}
+function saveTargets(){localStorage.setItem('targetP',targetP.value);localStorage.setItem('targetC',targetC.value);update()}
+function init(){targetP.value=localStorage.getItem('targetP')||150;targetC.value=localStorage.getItem('targetC')||2200;renderMeals();renderSkip();update()}
+function blocked(m){let s=(m.name+' '+m.ingredients).toLowerCase();return skipped.some(x=>s.includes(x))}
+function addMeal(i){if(!blocked(meals[i])){plan.push(i);localStorage.setItem('meal_plan',JSON.stringify(plan));update()}}
+function removeMeal(n){plan.splice(n,1);localStorage.setItem('meal_plan',JSON.stringify(plan));update()}
+function mealCard(i,button=true){let m=meals[i];return `<div class="meal"><h3>${m.name}</h3><div class="meta">${m.ingredients}</div><span class="pill">${m.category}</span><span class="pill">💪 ${m.protein}g protein</span><span class="pill">🔥 ${m.calories} kcal</span>${button?`<div class="actions"><button class="btn" onclick="addMeal(${i})">＋ Use this meal</button></div>`:''}</div>`}
+function renderMeals(){let q=(mealSearch.value||'').toLowerCase(),c=cat.value;mealList.innerHTML=meals.map((m,i)=>({m,i})).filter(x=>(c==='All'||x.m.category===c)&&(!q||(x.m.name+' '+x.m.ingredients).toLowerCase().includes(q))).filter(x=>!blocked(x.m)).map(x=>mealCard(x.i)).join('')||'<p class="small">No matching meals. Check your Skip Foods list.</p>'}
+function renderSuggestions(){let candidates=meals.map((m,i)=>({m,i})).filter(x=>!blocked(x.m));let tp=+targetP.value||150,tc=+targetC.value||2200,totalP=plan.reduce((s,i)=>s+meals[i].protein,0),totalC=plan.reduce((s,i)=>s+meals[i].calories,0);let need=tp-totalP;
+let preferred=candidates.filter(x=>x.m.protein<=Math.max(need+10,25)).sort((a,b)=>Math.abs(need-a.m.protein)-Math.abs(need-b.m.protein));
+suggestions.innerHTML=preferred.slice(0,4).map(x=>mealCard(x.i)).join('')||'<p class="small">No suggestions available with your skipped foods.</p>'}
+function update(){let tp=plan.reduce((s,i)=>s+meals[i].protein,0),tc=plan.reduce((s,i)=>s+meals[i].calories,0),tpp=+targetP.value||150,tcc=+targetC.value||2200;totalP.textContent=tp+'g';totalC.textContent=tc;leftP.textContent=Math.max(0,tpp-tp)+'g';leftC.textContent=Math.max(0,tcc-tc);pbar.style.width=Math.min(100,tp/tpp*100)+'%';today.innerHTML=plan.map((i,n)=>mealCard(i,false)+`<button class="btn secondary" onclick="removeMeal(${n})">Remove</button>`).join('')||'<p class="small">No meals added yet. Use the suggestions below.</p>';renderSuggestions()}
+function renderSkip(){let q=(skipSearch.value||'').toLowerCase();skipList.innerHTML=skipFoods.filter(x=>x.includes(q)).map(x=>`<label class="check"><input type="checkbox" ${skipped.includes(x)?'checked':''} onchange="toggleSkip('${x}')">${x}</label>`).join('')}
+function toggleSkip(x){if(skipped.includes(x))skipped=skipped.filter(y=>y!==x);else skipped.push(x);localStorage.setItem('meal_skipped',JSON.stringify(skipped));renderSkip();update();renderMeals()}
+function clearSkip(){skipped=[];localStorage.setItem('meal_skipped','[]');renderSkip();update();renderMeals()}
+init();
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script></body></html>
