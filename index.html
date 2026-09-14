@@ -27,23 +27,30 @@
   body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
     background:var(--bg);color:var(--ink);transition:background .3s,color .3s}
   header{background:linear-gradient(135deg,var(--hero1),var(--hero2));color:#fff;
-    padding:24px 20px 28px;position:relative}
-  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-  header h1{margin:0;font-size:28px;line-height:1.15}
+    padding:26px 20px 30px;position:relative;overflow:hidden}
+  header::before{content:"";position:absolute;top:-60px;right:-40px;width:220px;height:220px;
+    background:radial-gradient(circle,rgba(255,255,255,.14),transparent 70%);pointer-events:none}
+  .hero-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;position:relative}
+  header h1{margin:0;font-size:30px;line-height:1.12;letter-spacing:-.5px}
   header p{margin:8px 0 0;color:var(--herotext);font-size:15px;line-height:1.4}
   .theme-toggle{flex:none;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.25);
     border-radius:999px;padding:9px 14px;font-size:14px;font-weight:700;cursor:pointer;
     display:flex;align-items:center;gap:6px;backdrop-filter:blur(4px)}
   .theme-toggle:hover{background:rgba(255,255,255,.24)}
-  .nav{display:flex;gap:8px;margin-top:18px}
+  .nav{display:flex;gap:8px;margin-top:20px;position:relative}
   .nav-btn{background:rgba(255,255,255,.10);color:#fff;border:1px solid rgba(255,255,255,.22);
-    border-radius:12px;padding:10px 16px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
+    border-radius:999px;padding:10px 18px;font-size:14px;font-weight:700;cursor:pointer;transition:.2s}
   .nav-btn:hover{background:rgba(255,255,255,.2)}
-  .nav-btn.active{background:#fff;color:var(--hero1)}
-  main{max-width:900px;margin:auto;padding:16px 14px 60px}
-  .card{background:var(--card);border-radius:20px;padding:20px;margin-bottom:16px;
+  .nav-btn.active{background:#fff;color:var(--hero1);box-shadow:0 4px 12px rgba(0,0,0,.2)}
+  main{max-width:960px;margin:auto;padding:18px 14px 60px}
+  .card{background:var(--card);border-radius:22px;padding:22px;margin-bottom:16px;
     box-shadow:var(--shadow);transition:background .3s}
   h2{font-size:21px;margin:0 0 14px}
+  .section-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px}
+  .section-head h2{margin:0}
+  .photo-switch{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700;color:var(--muted);
+    cursor:pointer;background:var(--soft);border:1px solid var(--line);border-radius:999px;padding:7px 12px;margin:0}
+  .photo-switch input{margin:0}
   .row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   label{display:block;color:var(--muted);font-size:14px;margin-bottom:6px;font-weight:600}
   input,select{width:100%;border:1px solid var(--line);border-radius:14px;padding:12px 14px;
@@ -63,16 +70,33 @@
   .bar.cal{background:var(--accent)}
 
   /* tabs */
-  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
   .tab{flex:1;min-width:90px;text-align:center;background:var(--tabbg);border:1px solid var(--line);
-    border-radius:12px;padding:10px;font-weight:700;cursor:pointer;font-size:14px;color:var(--tabink);
+    border-radius:999px;padding:11px;font-weight:700;cursor:pointer;font-size:14px;color:var(--tabink);
     transition:.2s}
-  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand)}
+  .tab:hover{border-color:var(--brand)}
+  .tab.active{background:var(--brand);color:#fff;border-color:var(--brand);box-shadow:0 4px 12px rgba(22,163,74,.3)}
 
   /* dishes */
-  .dish{border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px;background:var(--soft)}
+  .dish-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+  .dish{border:1px solid var(--line);border-radius:20px;overflow:hidden;background:var(--card);
+    display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;box-shadow:var(--shadow)}
+  .dish:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(15,23,42,.14)}
+  [data-theme="dark"] .dish:hover{box-shadow:0 14px 34px rgba(0,0,0,.55)}
+  .dish-thumb{height:132px;display:flex;align-items:center;justify-content:center;position:relative;
+    font-size:60px;filter:saturate(1.05);overflow:hidden}
+  .dish-thumb::after{content:"";position:absolute;inset:0;z-index:2;
+    background:linear-gradient(to top,rgba(0,0,0,.28),rgba(0,0,0,0) 55%)}
+  .dish-thumb .photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;
+    opacity:0;transition:opacity .4s}
+  .dish-thumb .photo.loaded{opacity:1}
+  .dish-thumb .emoji{position:relative;z-index:1;text-shadow:0 4px 10px rgba(0,0,0,.25)}
+  .dish-thumb .cat-chip{position:absolute;top:10px;left:10px;z-index:3;background:rgba(255,255,255,.9);
+    color:#0f172a;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;
+    padding:4px 9px;border-radius:999px}
+  .dish-body{padding:14px 16px 16px;display:flex;flex-direction:column;flex:1}
   .dish-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
-  .dish-title{font-size:18px;font-weight:750}
+  .dish-title{font-size:17px;font-weight:750;line-height:1.25}
   .dish-cat{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
   .badges{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
   .badge{border-radius:999px;padding:5px 10px;font-size:12px;font-weight:700}
@@ -91,8 +115,12 @@
   .ing.skipped{opacity:.45}
   .ing .name .skip-tag{display:inline-block;background:var(--danger);color:#fff;border-radius:6px;
     font-size:10px;font-weight:700;padding:1px 5px;margin-left:6px;vertical-align:middle}
-  .dish-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  button{border:0;border-radius:12px;padding:11px 15px;font-size:14px;font-weight:700;cursor:pointer}
+  .dish-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+  .dish-actions .add{flex:1}
+  button{border:0;border-radius:12px;padding:11px 15px;font-size:14px;font-weight:700;cursor:pointer;
+    transition:filter .15s,transform .1s}
+  button:hover{filter:brightness(1.05)}
+  button:active{transform:scale(.97)}
   .btn-primary{background:var(--brand);color:#fff}
   .btn-sky{background:var(--brand2);color:#fff}
   .btn-ghost{background:var(--tabbg);color:var(--ink);border:1px solid var(--line)}
@@ -112,7 +140,9 @@
   .skip-item input{margin:0}
 
   .day-item{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;
-    display:flex;justify-content:space-between;align-items:center;gap:10px}
+    display:flex;justify-content:space-between;align-items:center;gap:12px}
+  .day-thumb{width:46px;height:46px;flex:none;border-radius:12px;display:flex;align-items:center;
+    justify-content:center;font-size:24px;box-shadow:0 3px 8px rgba(0,0,0,.15)}
   .day-item .meta{color:var(--muted);font-size:13px}
   .empty{color:var(--muted);padding:10px 0;line-height:1.5}
   .small{font-size:12px;color:var(--muted);margin-top:8px}
@@ -215,7 +245,13 @@
 
   <!-- Dish picker -->
   <section class="card">
-    <h2>🥗 Choose a Dish</h2>
+    <div class="section-head">
+      <h2>🥗 Choose a Dish</h2>
+      <label class="photo-switch">
+        <input type="checkbox" id="photoToggle" checked />
+        <span>📷 Photos</span>
+      </label>
+    </div>
     <div class="hint">
       Every dish lists its ingredients with individual protein &amp; calories.
       Untick an ingredient to remove it, or change the grams — the dish totals update live.
@@ -632,6 +668,7 @@ const DISHES = [
 let currentCat = "Breakfast";
 let plan = [];   // array of dish objects (deep copies) added to the day
 let skipped = new Set();   // ingredient keys the user wants to avoid
+let usePhotos = true;      // show real photos (fallback to emoji thumbnails)
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const SLOTS = ["Breakfast","Lunch","Dinner","Snacks"];
 /* week[dayIndex][slot] = dish name (string) or "" */
@@ -650,11 +687,93 @@ function dishProtein(d){ return d.ingredients.reduce((s,i)=> s + (ingActive(i) ?
 function dishKcal(d){ return d.ingredients.reduce((s,i)=> s + (ingActive(i) ? ingKcal(i):0), 0); }
 
 /* ---------------------------------------------------------------
+   RECIPE IMAGERY
+   Offline-friendly "photos": a food emoji on a dish-specific gradient.
+   The emoji is picked from keywords in the dish name; the gradient is
+   derived from a hash of the name so each dish looks distinct & stable.
+----------------------------------------------------------------*/
+const DISH_EMOJI = [
+  [/smoothie|shake|lassi|drink/i, "🥤"],
+  [/toast|sandwich|bread/i, "🥪"],
+  [/dosa|chilla|cheela|uttapam|adai/i, "🥞"],
+  [/idli/i, "🍥"],
+  [/paratha|roti|wrap|kathi|roll/i, "🌯"],
+  [/biryani|pulao|rice|khichdi|fried rice/i, "🍚"],
+  [/salad|chaat|sprout|cups|skewer/i, "🥗"],
+  [/soup|sambar/i, "🍲"],
+  [/tikka|kebab|skewer|grill/i, "🍢"],
+  [/egg/i, "🍳"],
+  [/yogurt|curd|dahi|pudding|bowl/i, "🥣"],
+  [/oats|poha|upma|porridge/i, "🥣"],
+  [/paneer|tofu|bhurji/i, "🧀"],
+  [/dal|rajma|chole|chana|lobia|curry|masala|kofta|keema/i, "🍛"],
+  [/makhana|nuts|chana mix|roasted/i, "🥜"],
+  [/banana|fruit/i, "🍌"]
+];
+function dishEmoji(name){
+  for(const [re, e] of DISH_EMOJI) if(re.test(name)) return e;
+  return "🍽️";
+}
+/* Real food photo via Unsplash's keyword source endpoint.
+   Falls back silently to the gradient+emoji if it fails to load (offline/error). */
+const PHOTO_KEYWORDS = [
+  [/smoothie|shake|lassi/i, "smoothie"],
+  [/toast|sandwich/i, "sandwich"],
+  [/dosa|chilla|cheela|uttapam|adai/i, "dosa"],
+  [/idli/i, "idli"],
+  [/paratha/i, "paratha"],
+  [/roti|wrap|kathi|roll/i, "indian-bread"],
+  [/biryani/i, "biryani"],
+  [/pulao|rice|khichdi|fried rice/i, "rice-bowl"],
+  [/salad/i, "healthy-salad"],
+  [/chaat/i, "chaat"],
+  [/sprout/i, "sprouts-salad"],
+  [/tikka|kebab|skewer|grill/i, "tikka"],
+  [/egg/i, "egg-breakfast"],
+  [/yogurt|curd|dahi|pudding/i, "yogurt-bowl"],
+  [/oats|porridge/i, "oatmeal"],
+  [/poha/i, "poha"],
+  [/upma/i, "upma"],
+  [/paneer/i, "paneer"],
+  [/tofu/i, "tofu"],
+  [/bhurji/i, "scrambled"],
+  [/rajma/i, "rajma"],
+  [/chole|chana/i, "chickpea-curry"],
+  [/dal|lentil/i, "dal"],
+  [/curry|masala|kofta|keema/i, "indian-curry"],
+  [/makhana|nuts|roasted/i, "nuts"],
+  [/banana|fruit/i, "fruit-bowl"],
+  [/quinoa/i, "quinoa-bowl"]
+];
+function dishPhotoKeyword(name){
+  for(const [re, kw] of PHOTO_KEYWORDS) if(re.test(name)) return kw;
+  return "healthy-food";
+}
+function dishPhotoUrl(name){
+  // stable per-dish image using a signature seed so each dish keeps the same photo
+  const sig = hashStr(name);
+  return `https://source.unsplash.com/400x300/?${encodeURIComponent(dishPhotoKeyword(name))},food&sig=${sig}`;
+}
+const THUMB_PALETTES = [
+  ["#fb7185","#f43f5e"], ["#fbbf24","#f59e0b"], ["#34d399","#10b981"],
+  ["#60a5fa","#3b82f6"], ["#a78bfa","#8b5cf6"], ["#f472b6","#ec4899"],
+  ["#4ade80","#22c55e"], ["#38bdf8","#0ea5e9"], ["#fb923c","#ea580c"],
+  ["#2dd4bf","#14b8a6"], ["#c084fc","#a855f7"], ["#facc15","#eab308"]
+];
+function hashStr(s){ let h=0; for(let i=0;i<s.length;i++) h=(h*31+s.charCodeAt(i))>>>0; return h; }
+function dishGradient(name){
+  const [a,b] = THUMB_PALETTES[hashStr(name) % THUMB_PALETTES.length];
+  const angle = 120 + (hashStr(name) % 60);
+  return `linear-gradient(${angle}deg, ${a}, ${b})`;
+}
+
+/* ---------------------------------------------------------------
    RENDER: dish picker
 ----------------------------------------------------------------*/
 function renderDishes(){
   const box = $("dishList");
   box.innerHTML = "";
+  box.className = "dish-grid";
   const list = DISHES.filter(d => d.category === currentCat);
 
   list.forEach((d, idx) => {
@@ -665,19 +784,26 @@ function renderDishes(){
     const p = dishProtein(d), c = dishKcal(d);
 
     card.innerHTML = `
-      <div class="dish-head">
-        <div>
+      <div class="dish-thumb" style="background:${dishGradient(d.name)}">
+        <span class="cat-chip">${d.category}</span>
+        <span class="emoji">${dishEmoji(d.name)}</span>
+        ${usePhotos ? `<img class="photo" alt="${d.name}" loading="lazy"
+          src="${dishPhotoUrl(d.name)}"
+          onload="this.classList.add('loaded')"
+          onerror="this.remove()" />` : ``}
+      </div>
+      <div class="dish-body">
+        <div class="dish-head">
           <div class="dish-title">${d.name}</div>
-          <div class="dish-cat">${d.category}</div>
         </div>
         <div class="badges">
           <span class="badge p">💪 <b class="dp">${round(p)}</b>g</span>
           <span class="badge c">🔥 <b class="dc">${round(c)}</b> kcal</span>
         </div>
-      </div>
-      <div class="ing-list"></div>
-      <div class="dish-actions">
-        <button class="btn-primary add">＋ Add to plan</button>
+        <div class="ing-list"></div>
+        <div class="dish-actions">
+          <button class="btn-primary add">＋ Add to plan</button>
+        </div>
       </div>
     `;
 
@@ -754,7 +880,8 @@ function renderPlan(){
     const item = document.createElement("div");
     item.className = "day-item";
     item.innerHTML = `
-      <div>
+      <div class="day-thumb" style="background:${dishGradient(d.name)}">${dishEmoji(d.name)}</div>
+      <div style="flex:1">
         <div style="font-weight:700">${d.name}</div>
         <div class="meta">${d.category} · 💪 ${round(dishProtein(d))}g · 🔥 ${round(dishKcal(d))} kcal</div>
         <div class="small">${activeIng}</div>
@@ -799,6 +926,7 @@ function save(){
       plan,
       skipped:Array.from(skipped),
       week,
+      usePhotos,
       proteinTarget:$("proteinTarget").value,
       calorieTarget:$("calorieTarget").value
     }));
@@ -819,6 +947,10 @@ function load(){
     }
     if(s.proteinTarget) $("proteinTarget").value = s.proteinTarget;
     if(s.calorieTarget) $("calorieTarget").value = s.calorieTarget;
+    if(typeof s.usePhotos === "boolean"){
+      usePhotos = s.usePhotos;
+      $("photoToggle").checked = usePhotos;
+    }
   }catch(e){ plan = []; skipped = new Set(); }
 }
 
@@ -1139,6 +1271,11 @@ $("tabs").addEventListener("click", e => {
 $("proteinTarget").addEventListener("input", () => { updateStats(); save(); });
 $("calorieTarget").addEventListener("input", () => { updateStats(); save(); });
 $("clearDay").addEventListener("click", () => { plan = []; save(); renderPlan(); updateStats(); });
+
+$("photoToggle").addEventListener("change", e => {
+  usePhotos = e.target.checked;
+  save(); renderDishes();
+});
 
 $("themeToggle").addEventListener("click", () => {
   const dark = document.documentElement.getAttribute("data-theme") === "dark";

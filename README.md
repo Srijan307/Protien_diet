@@ -32,9 +32,12 @@ own protein and calorie values, so totals recalculate live as you customize.
   plan, and the shopping list. Includes a **Clear all skips** button and live counter.
 
 ### 🎨 General
+- **Recipe images** — each dish shows a real food **photo** (loaded on demand) with a
+  graceful fallback to an offline, dish‑specific **gradient + food emoji** thumbnail.
+  A **📷 Photos** toggle turns real photos on/off.
 - **Dark / light theme** toggle (remembers your choice, defaults to your OS preference).
 - **Offline support** via a service worker + installable web app manifest.
-- **Auto‑save** to `localStorage` — plan, week, targets, theme and skips all persist.
+- **Auto‑save** to `localStorage` — plan, week, targets, theme, photo mode and skips all persist.
 
 > Legumes, dals and grains are measured **dry / uncooked** (as weighed from the packet).
 
@@ -72,6 +75,10 @@ python -m http.server 8000
 
 > The PDF export uses the jsPDF library loaded from a CDN, so **PDF download needs an
 > internet connection** (the rest of the app works offline).
+
+> Recipe **photos** are fetched on demand from an online image service, so they need
+> internet too. When offline (or if the toggle is off), each dish falls back to its
+> gradient + emoji thumbnail — the app stays fully functional.
 
 ## 🧮 How the numbers work
 
