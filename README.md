@@ -23,13 +23,18 @@ own protein and calorie values, so totals recalculate live as you customize.
   consolidated shopping list as `weekly-protein-meal-plan.pdf`.
 
 ### 📖 Ingredients
-- Full **nutrition table** for 60+ ingredients: reference amount, protein, calories, and
-  a **"P / 100 kcal"** protein‑density column (higher = leaner source).
+- Full **nutrition table** for 60+ **specific** ingredients (no generic "mixed" items):
+  reference amount, protein, calories, and a **"P / 100 kcal"** protein‑density column
+  (higher = leaner source).
 - **Search** and **group filter** (Dairy & Soy, Legumes (dry), Grains & Flours,
-  Nuts/Seeds/Boosters, Vegetables & Fruit).
+  Nuts/Seeds/Boosters, Vegetables, Fruit).
+- Ingredients favour **high‑protein / low‑fat** choices — individual dals (moong, toor,
+  masoor, urad, chana), specific vegetables (spinach, broccoli, kale, methi, brussels
+  sprouts, cauliflower…) and leaner fruits (guava, berries, orange, kiwi…).
 - **Integrated Skip column** — tick **Skip** on any ingredient to avoid it. Skipped
-  ingredients are switched off in every dish and excluded from all totals, the weekly
-  plan, and the shopping list. Includes a **Clear all skips** button and live counter.
+  ingredients are hidden from the dish picker and week planner, switched off in every
+  dish, and excluded from all totals and the shopping list. Includes a **Clear all
+  skips** button and live counter.
 
 ### 🎨 General
 - **Recipe images** — each dish shows a real food **photo** (loaded on demand) with a
@@ -41,26 +46,38 @@ own protein and calorie values, so totals recalculate live as you customize.
 
 > Legumes, dals and grains are measured **dry / uncooked** (as weighed from the packet).
 
-## 🍽️ Dishes included
+## 🍽️ Dishes included (80 total)
 
-**Breakfast:** Moong Dal & Paneer Chilla, Besan Paneer Cheela, Tofu Bhurji Toast,
+**Breakfast (21):** Moong Dal & Paneer Chilla, Besan Paneer Cheela, Tofu Bhurji Toast,
 Greek Yogurt Protein Bowl, Soya Poha, Paneer Oats Chilla, Sattu Chilla + Curd,
 Masala Oats + Egg Whites, Sprouts & Paneer Salad, Ragi Dosa + Sambar, Quinoa Upma,
-Protein Banana Smoothie.
+Protein Banana Smoothie, Peanut Butter Oats Bowl, Moong Sprout Dosa + Curd,
+Egg White Paneer Bhurji + Toast, Chia Yogurt Pudding, Besan Chilla + Sattu Lassi,
+Dalia Veg Porridge, Semolina Veg Upma, Soy Protein Pancakes, Tofu Kale Scramble + Toast.
 
-**Lunch:** Soya Chunk Curry + Roti + Curd, Paneer Bhurji + Roti + Curd,
-Rajma Rice Bowl + Curd, Chole + Roti + Curd, Mixed Dal + Paneer + Roti,
+**Lunch (21):** Soya Chunk Curry + Roti + Curd, Paneer Bhurji + Roti + Curd,
+Rajma Rice Bowl + Curd, Chole + Roti + Curd, Toor Dal + Paneer + Roti,
 Tofu Curry + Rice + Curd, Dal Rice + Paneer Tikka, Chana Dal Khichdi + Curd,
 Lobia Masala + Roti, Quinoa Rajma Power Bowl, Palak Paneer + Roti,
-Sprout & Sattu Salad Bowl.
+Sprout & Sattu Salad Bowl, Masoor Dal + Brown Rice + Salad, Tofu Broccoli Stir‑fry + Rice,
+Black Chana Salad + Roti, Paneer Quinoa Biryani, Rajma & Sweet Potato Bowl,
+Whole Wheat Paneer Wrap, Edamame Quinoa Salad, Moong Dal Cauliflower Bowl,
+Soya Chunk Brussels Stir‑fry.
 
-**Dinner:** Paneer Tikka + Dal, Soya Tikka + Roti + Curd, Tofu Bhurji + Roti + Curd,
+**Dinner (22):** Paneer Tikka + Dal, Soya Tikka + Roti + Curd, Tofu Bhurji + Roti + Curd,
 Rajma Paneer Rice Bowl, Palak Tofu + Roti, High Protein Dal Tadka + Paneer,
 Soya Keema + Roti, Mushroom Tofu Stir‑fry + Roti, Masoor Dal + Paneer + Roti,
-Egg Bhurji + Roti, Chana Masala + Quinoa, Low‑fat Paneer Curry + Roti.
+Egg Bhurji + Roti, Chana Masala + Quinoa, Low‑fat Paneer Curry + Roti,
+Lobia & Spinach Curry + Roti, Tofu Tikka Masala + Quinoa, Urad Dal + Paneer + Roti,
+Soya Chunk Pulao + Raita, Egg Curry + Roti, Edamame Tofu Stir‑fry + Rice,
+Paneer Bottle Gourd Curry + Roti, Kale Chana Dal + Roti, Brussels Tofu Bhurji + Roti,
+Soy Protein Veg Curry + Rice.
 
-**Snacks:** Roasted Makhana + Buttermilk, Sprout Chaat, Greek Yogurt + Soy Nuts,
-Paneer Tikka Bites, Peanut & Chana Chaat, Whey Protein Shake.
+**Snacks (16):** Roasted Makhana + Buttermilk, Sprout Chaat, Greek Yogurt + Soy Nuts,
+Paneer Tikka Bites, Peanut & Chana Chaat, Whey Protein Shake, Roasted Chana & Nuts Mix,
+Hung Curd Fruit Bowl, Tofu Veggie Skewers, Peanut Butter Banana Toast, Cheese & Sprout Cups,
+Orange & Almond Yogurt Cup, Kiwi Protein Smoothie, Roasted Edamame Bowl,
+Apple Peanut Butter Slices, Walnut Date Energy Bites.
 
 ## 🚀 Run it
 

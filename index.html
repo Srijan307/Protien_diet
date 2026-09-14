@@ -255,6 +255,7 @@
     <div class="hint">
       Every dish lists its ingredients with individual protein &amp; calories.
       Untick an ingredient to remove it, or change the grams — the dish totals update live.
+      Dishes that use a <b>skipped ingredient</b> (set on the Ingredients page) are hidden here.
     </div>
     <div class="tabs" id="tabs">
       <div class="tab active" data-cat="Breakfast">🌅 Breakfast</div>
@@ -395,7 +396,8 @@ const ING = {
   blackChana:    { label:"Black chana (dry)",   unit:"g",  per:100, protein:19,  kcal:364, grp:"Legumes (dry)" },
   lobia:         { label:"Lobia/black-eyed (dry)",unit:"g",per:100, protein:24,  kcal:336, grp:"Legumes (dry)" },
   greenPeas:     { label:"Green peas",          unit:"g",  per:100, protein:5,   kcal:81,  grp:"Legumes (dry)" },
-  sprouts:       { label:"Mixed sprouts",       unit:"g",  per:100, protein:9,   kcal:100, grp:"Legumes (dry)" },
+  edamame:       { label:"Edamame (soybeans)",  unit:"g",  per:100, protein:11,  kcal:121, grp:"Legumes (dry)" },
+  moongSprouts:  { label:"Moong sprouts",       unit:"g",  per:100, protein:9,   kcal:100, grp:"Legumes (dry)" },
 
   /* --- flours & grains --- */
   besan:         { label:"Besan (gram flour)",  unit:"g",  per:100, protein:22,  kcal:387, grp:"Grains & Flours" },
@@ -417,7 +419,6 @@ const ING = {
   almonds:       { label:"Almonds",             unit:"g",  per:100, protein:21,  kcal:579, grp:"Nuts, Seeds & Boosters" },
   walnuts:       { label:"Walnuts",             unit:"g",  per:100, protein:15,  kcal:654, grp:"Nuts, Seeds & Boosters" },
   cashews:       { label:"Cashews",             unit:"g",  per:100, protein:18,  kcal:553, grp:"Nuts, Seeds & Boosters" },
-  mixedSeeds:    { label:"Mixed seeds",         unit:"g",  per:100, protein:20,  kcal:560, grp:"Nuts, Seeds & Boosters" },
   chiaSeeds:     { label:"Chia seeds",          unit:"g",  per:100, protein:17,  kcal:486, grp:"Nuts, Seeds & Boosters" },
   pumpkinSeeds:  { label:"Pumpkin seeds",       unit:"g",  per:100, protein:30,  kcal:559, grp:"Nuts, Seeds & Boosters" },
   flaxSeeds:     { label:"Flax seeds",          unit:"g",  per:100, protein:18,  kcal:534, grp:"Nuts, Seeds & Boosters" },
@@ -428,21 +429,29 @@ const ING = {
   egg:           { label:"Egg (whole)",         unit:"pc", per:1,   protein:6,   kcal:78,  grp:"Nuts, Seeds & Boosters" },
   eggWhite:      { label:"Egg white",           unit:"pc", per:1,   protein:3.6, kcal:17,  grp:"Nuts, Seeds & Boosters" },
 
-  /* --- veg & fruit --- */
-  spinach:       { label:"Spinach",             unit:"g",  per:100, protein:2.9, kcal:23,  grp:"Vegetables & Fruit" },
-  veggies:       { label:"Mixed vegetables",    unit:"g",  per:100, protein:2,   kcal:40,  grp:"Vegetables & Fruit" },
-  tomato:        { label:"Tomato",              unit:"g",  per:100, protein:0.9, kcal:18,  grp:"Vegetables & Fruit" },
-  onion:         { label:"Onion",               unit:"g",  per:100, protein:1.1, kcal:40,  grp:"Vegetables & Fruit" },
-  mushroom:      { label:"Mushroom",            unit:"g",  per:100, protein:3.1, kcal:22,  grp:"Vegetables & Fruit" },
-  broccoli:      { label:"Broccoli",            unit:"g",  per:100, protein:2.8, kcal:34,  grp:"Vegetables & Fruit" },
-  capsicum:      { label:"Capsicum",            unit:"g",  per:100, protein:1,   kcal:31,  grp:"Vegetables & Fruit" },
-  carrot:        { label:"Carrot",              unit:"g",  per:100, protein:0.9, kcal:41,  grp:"Vegetables & Fruit" },
-  sweetPotato:   { label:"Sweet potato",        unit:"g",  per:100, protein:1.6, kcal:86,  grp:"Vegetables & Fruit" },
-  avocado:       { label:"Avocado",             unit:"g",  per:100, protein:2,   kcal:160, grp:"Vegetables & Fruit" },
-  fruit:         { label:"Fruit",               unit:"g",  per:100, protein:0.7, kcal:55,  grp:"Vegetables & Fruit" },
-  banana:        { label:"Banana",              unit:"pc", per:1,   protein:1.3, kcal:105, grp:"Vegetables & Fruit" },
-  apple:         { label:"Apple",               unit:"pc", per:1,   protein:0.5, kcal:95,  grp:"Vegetables & Fruit" },
-  dates:         { label:"Dates",               unit:"g",  per:100, protein:2.5, kcal:277, grp:"Vegetables & Fruit" }
+  /* --- vegetables (high protein / low fat first) --- */
+  spinach:       { label:"Spinach",             unit:"g",  per:100, protein:2.9, kcal:23,  grp:"Vegetables" },
+  broccoli:      { label:"Broccoli",            unit:"g",  per:100, protein:2.8, kcal:34,  grp:"Vegetables" },
+  mushroom:      { label:"Mushroom",            unit:"g",  per:100, protein:3.1, kcal:22,  grp:"Vegetables" },
+  kale:          { label:"Kale",                unit:"g",  per:100, protein:4.3, kcal:35,  grp:"Vegetables" },
+  brusselsSprout:{ label:"Brussels sprouts",    unit:"g",  per:100, protein:3.4, kcal:43,  grp:"Vegetables" },
+  fenugreek:     { label:"Methi (fenugreek)",   unit:"g",  per:100, protein:4.4, kcal:49,  grp:"Vegetables" },
+  cauliflower:   { label:"Cauliflower",         unit:"g",  per:100, protein:1.9, kcal:25,  grp:"Vegetables" },
+  capsicum:      { label:"Capsicum",            unit:"g",  per:100, protein:1,   kcal:31,  grp:"Vegetables" },
+  tomato:        { label:"Tomato",              unit:"g",  per:100, protein:0.9, kcal:18,  grp:"Vegetables" },
+  onion:         { label:"Onion",               unit:"g",  per:100, protein:1.1, kcal:40,  grp:"Vegetables" },
+  carrot:        { label:"Carrot",              unit:"g",  per:100, protein:0.9, kcal:41,  grp:"Vegetables" },
+  bottleGourd:   { label:"Bottle gourd (lauki)",unit:"g",  per:100, protein:0.6, kcal:14,  grp:"Vegetables" },
+  sweetPotato:   { label:"Sweet potato",        unit:"g",  per:100, protein:1.6, kcal:86,  grp:"Vegetables" },
+
+  /* --- fruit (higher protein / lower fat) --- */
+  guava:         { label:"Guava",               unit:"g",  per:100, protein:2.6, kcal:68,  grp:"Fruit" },
+  berries:       { label:"Berries",             unit:"g",  per:100, protein:1.4, kcal:57,  grp:"Fruit" },
+  orange:        { label:"Orange",              unit:"pc", per:1,   protein:1.2, kcal:62,  grp:"Fruit" },
+  kiwi:          { label:"Kiwi",                unit:"pc", per:1,   protein:0.8, kcal:42,  grp:"Fruit" },
+  banana:        { label:"Banana",              unit:"pc", per:1,   protein:1.3, kcal:105, grp:"Fruit" },
+  apple:         { label:"Apple",               unit:"pc", per:1,   protein:0.5, kcal:95,  grp:"Fruit" },
+  dates:         { label:"Dates",               unit:"g",  per:100, protein:2.5, kcal:277, grp:"Fruit" }
 };
 
 /* helper: item = {ing:key, qty:number, on:bool} */
@@ -469,37 +478,37 @@ function dish(name, category, items){
 const DISHES = [
   /* ---------- BREAKFAST ---------- */
   dish("Moong Dal & Paneer Chilla", "Breakfast", [
-    ["moongDal",80],["paneer",100],["veggies",100],["curd",150]
+    ["moongDal",80],["paneer",100],["spinach",100],["curd",150]
   ]),
   dish("Besan Paneer Cheela", "Breakfast", [
-    ["besan",100],["paneer",100],["veggies",80],["curd",150]
+    ["besan",100],["paneer",100],["capsicum",80],["curd",150]
   ]),
   dish("Tofu Bhurji Toast", "Breakfast", [
-    ["tofu",250],["bread",2],["veggies",100]
+    ["tofu",250],["bread",2],["capsicum",100]
   ]),
   dish("Greek Yogurt Protein Bowl", "Breakfast", [
-    ["greekYogurt",300],["fruit",100],["mixedSeeds",20]
+    ["greekYogurt",300],["berries",100],["pumpkinSeeds",20]
   ]),
   dish("Soya Poha", "Breakfast", [
-    ["poha",70],["soyGranules",40],["veggies",100],["peanuts",15]
+    ["poha",70],["soyGranules",40],["greenPeas",80],["peanuts",15]
   ]),
   dish("Paneer Oats Chilla", "Breakfast", [
-    ["oats",80],["paneer",120],["veggies",80],["curd",150]
+    ["oats",80],["paneer",120],["spinach",80],["curd",150]
   ]),
   dish("Sattu Chilla + Curd", "Breakfast", [
-    ["sattu",80],["veggies",80],["curd",250]
+    ["sattu",80],["onion",80],["curd",250]
   ]),
   dish("Masala Oats + Egg Whites", "Breakfast", [
-    ["oats",60],["eggWhite",4],["veggies",100],["milk",150]
+    ["oats",60],["eggWhite",4],["broccoli",100],["milk",150]
   ]),
   dish("Sprouts & Paneer Salad", "Breakfast", [
-    ["sprouts",120],["paneer",80],["tomato",50],["onion",30]
+    ["moongSprouts",120],["paneer",80],["tomato",50],["onion",30]
   ]),
   dish("Ragi Dosa + Sambar", "Breakfast", [
-    ["ragi",70],["uradDal",20],["toorDal",30],["veggies",80]
+    ["ragi",70],["uradDal",20],["toorDal",30],["carrot",80]
   ]),
   dish("Quinoa Upma", "Breakfast", [
-    ["quinoa",70],["greenPeas",40],["veggies",80],["peanuts",10]
+    ["quinoa",70],["greenPeas",40],["carrot",80],["peanuts",10]
   ]),
   dish("Protein Banana Smoothie", "Breakfast", [
     ["milk",250],["wheyProtein",30],["banana",1],["chiaSeeds",10]
@@ -508,24 +517,36 @@ const DISHES = [
     ["oats",60],["peanutButter",20],["milk",200],["banana",1]
   ]),
   dish("Moong Sprout Dosa + Curd", "Breakfast", [
-    ["moongDal",70],["sprouts",60],["veggies",60],["curd",150]
+    ["moongDal",70],["moongSprouts",60],["onion",60],["curd",150]
   ]),
   dish("Egg White Paneer Bhurji + Toast", "Breakfast", [
     ["eggWhite",4],["paneer",80],["bread",2],["onion",30]
   ]),
   dish("Chia Yogurt Pudding", "Breakfast", [
-    ["greekYogurt",250],["chiaSeeds",20],["fruit",80],["almonds",10]
+    ["greekYogurt",250],["chiaSeeds",20],["guava",80],["almonds",10]
   ]),
   dish("Besan Chilla + Sattu Lassi", "Breakfast", [
-    ["besan",90],["veggies",70],["sattu",30],["buttermilk",200]
+    ["besan",90],["mushroom",70],["sattu",30],["buttermilk",200]
+  ]),
+  dish("Dalia Veg Porridge", "Breakfast", [
+    ["dalia",70],["greenPeas",40],["carrot",60],["milk",150]
+  ]),
+  dish("Semolina Veg Upma", "Breakfast", [
+    ["semolina",70],["greenPeas",40],["capsicum",60],["peanuts",10]
+  ]),
+  dish("Soy Protein Pancakes", "Breakfast", [
+    ["oats",50],["soyProtein",30],["egg",1],["banana",1]
+  ]),
+  dish("Tofu Kale Scramble + Toast", "Breakfast", [
+    ["tofu",200],["kale",80],["bread",2],["onion",30]
   ]),
 
   /* ---------- LUNCH ---------- */
   dish("Soya Chunk Curry + Roti + Curd", "Lunch", [
-    ["soyaChunks",70],["roti",2],["curd",200],["veggies",100]
+    ["soyaChunks",70],["roti",2],["curd",200],["capsicum",100]
   ]),
   dish("Paneer Bhurji + Roti + Curd", "Lunch", [
-    ["paneer",150],["roti",2],["curd",200],["veggies",80]
+    ["paneer",150],["roti",2],["curd",200],["tomato",80]
   ]),
   dish("Rajma Rice Bowl + Curd", "Lunch", [
     ["rajma",80],["rice",65],["curd",200]
@@ -533,8 +554,8 @@ const DISHES = [
   dish("Chole + Roti + Curd", "Lunch", [
     ["chole",80],["roti",2],["curd",200]
   ]),
-  dish("Mixed Dal + Paneer + Roti", "Lunch", [
-    ["toorDal",50],["masoorDal",30],["paneer",100],["roti",2]
+  dish("Toor Dal + Paneer + Roti", "Lunch", [
+    ["toorDal",80],["paneer",100],["roti",2]
   ]),
   dish("Tofu Curry + Rice + Curd", "Lunch", [
     ["tofu",250],["rice",65],["curd",200]
@@ -543,22 +564,22 @@ const DISHES = [
     ["toorDal",60],["rice",60],["paneer",100]
   ]),
   dish("Chana Dal Khichdi + Curd", "Lunch", [
-    ["chanaDal",60],["rice",50],["veggies",80],["curd",150]
+    ["chanaDal",60],["rice",50],["carrot",80],["curd",150]
   ]),
   dish("Lobia Masala + Roti", "Lunch", [
     ["lobia",80],["roti",2],["onion",40],["tomato",50]
   ]),
   dish("Quinoa Rajma Power Bowl", "Lunch", [
-    ["quinoa",70],["rajma",70],["veggies",80],["curd",150]
+    ["quinoa",70],["rajma",70],["broccoli",80],["curd",150]
   ]),
   dish("Palak Paneer + Roti", "Lunch", [
     ["paneer",150],["spinach",150],["roti",2]
   ]),
   dish("Sprout & Sattu Salad Bowl", "Lunch", [
-    ["sprouts",150],["sattu",30],["veggies",80],["curd",150]
+    ["moongSprouts",150],["sattu",30],["cauliflower",80],["curd",150]
   ]),
   dish("Masoor Dal + Brown Rice + Salad", "Lunch", [
-    ["masoorDal",70],["rice",60],["veggies",100],["curd",150]
+    ["masoorDal",70],["rice",60],["carrot",100],["curd",150]
   ]),
   dish("Tofu Broccoli Stir-fry + Rice", "Lunch", [
     ["tofu",200],["broccoli",120],["rice",60],["capsicum",60]
@@ -567,18 +588,30 @@ const DISHES = [
     ["blackChana",80],["onion",40],["tomato",50],["roti",2]
   ]),
   dish("Paneer Quinoa Biryani", "Lunch", [
-    ["paneer",120],["quinoa",70],["veggies",100],["curd",150]
+    ["paneer",120],["quinoa",70],["carrot",100],["curd",150]
   ]),
   dish("Rajma & Sweet Potato Bowl", "Lunch", [
-    ["rajma",80],["sweetPotato",150],["veggies",80],["curd",150]
+    ["rajma",80],["sweetPotato",150],["spinach",80],["curd",150]
+  ]),
+  dish("Whole Wheat Paneer Wrap", "Lunch", [
+    ["wheatFlour",80],["paneer",120],["capsicum",60],["onion",30]
+  ]),
+  dish("Edamame Quinoa Salad", "Lunch", [
+    ["edamame",120],["quinoa",60],["tomato",50],["kale",60]
+  ]),
+  dish("Moong Dal Cauliflower Bowl", "Lunch", [
+    ["moongDal",80],["cauliflower",120],["rice",50],["curd",150]
+  ]),
+  dish("Soya Chunk Brussels Stir-fry", "Lunch", [
+    ["soyaChunks",70],["brusselsSprout",100],["rice",60],["curd",150]
   ]),
 
   /* ---------- DINNER ---------- */
   dish("Paneer Tikka + Dal", "Dinner", [
-    ["paneer",150],["toorDal",60],["veggies",100]
+    ["paneer",150],["toorDal",60],["capsicum",100]
   ]),
   dish("Soya Tikka + Roti + Curd", "Dinner", [
-    ["soyaChunks",75],["roti",2],["curd",150],["veggies",80]
+    ["soyaChunks",75],["roti",2],["curd",150],["capsicum",80]
   ]),
   dish("Tofu Bhurji + Roti + Curd", "Dinner", [
     ["tofu",250],["roti",2],["curd",200]
@@ -590,13 +623,13 @@ const DISHES = [
     ["tofu",250],["spinach",150],["roti",2]
   ]),
   dish("High Protein Dal Tadka + Paneer", "Dinner", [
-    ["toorDal",50],["masoorDal",40],["paneer",120],["veggies",80]
+    ["masoorDal",90],["paneer",120],["fenugreek",80]
   ]),
   dish("Soya Keema + Roti", "Dinner", [
-    ["soyGranules",75],["roti",3],["veggies",100]
+    ["soyGranules",75],["roti",3],["greenPeas",100]
   ]),
   dish("Mushroom Tofu Stir-fry + Roti", "Dinner", [
-    ["mushroom",150],["tofu",200],["roti",2],["veggies",80]
+    ["mushroom",150],["tofu",200],["roti",2],["capsicum",80]
   ]),
   dish("Masoor Dal + Paneer + Roti", "Dinner", [
     ["masoorDal",70],["paneer",100],["roti",2]
@@ -605,10 +638,10 @@ const DISHES = [
     ["egg",3],["roti",2],["onion",40],["tomato",50]
   ]),
   dish("Chana Masala + Quinoa", "Dinner", [
-    ["chole",80],["quinoa",60],["veggies",80]
+    ["chole",80],["quinoa",60],["spinach",80]
   ]),
   dish("Low-fat Paneer Curry + Roti", "Dinner", [
-    ["lowFatPaneer",150],["roti",2],["curd",150],["veggies",80]
+    ["lowFatPaneer",150],["roti",2],["curd",150],["fenugreek",80]
   ]),
   dish("Lobia & Spinach Curry + Roti", "Dinner", [
     ["lobia",80],["spinach",120],["roti",2],["onion",30]
@@ -620,10 +653,25 @@ const DISHES = [
     ["uradDal",70],["paneer",100],["roti",2]
   ]),
   dish("Soya Chunk Pulao + Raita", "Dinner", [
-    ["soyaChunks",70],["rice",60],["curd",150],["veggies",80]
+    ["soyaChunks",70],["rice",60],["curd",150],["carrot",80]
   ]),
   dish("Egg Curry + Roti", "Dinner", [
     ["egg",3],["tomato",80],["onion",50],["roti",2]
+  ]),
+  dish("Edamame Tofu Stir-fry + Rice", "Dinner", [
+    ["edamame",120],["tofu",150],["rice",50],["broccoli",80]
+  ]),
+  dish("Paneer Bottle Gourd Curry + Roti", "Dinner", [
+    ["paneer",150],["bottleGourd",120],["roti",2],["tomato",50]
+  ]),
+  dish("Kale Chana Dal + Roti", "Dinner", [
+    ["chanaDal",80],["kale",100],["roti",2],["onion",30]
+  ]),
+  dish("Brussels Tofu Bhurji + Roti", "Dinner", [
+    ["tofu",250],["brusselsSprout",100],["roti",2]
+  ]),
+  dish("Soy Protein Veg Curry + Rice", "Dinner", [
+    ["soyProtein",30],["cauliflower",120],["rice",60],["curd",150]
   ]),
 
   /* ---------- SNACKS ---------- */
@@ -631,13 +679,13 @@ const DISHES = [
     ["makhana",40],["buttermilk",200]
   ]),
   dish("Sprout Chaat", "Snacks", [
-    ["sprouts",120],["onion",30],["tomato",40]
+    ["moongSprouts",120],["onion",30],["tomato",40]
   ]),
   dish("Greek Yogurt + Soy Nuts", "Snacks", [
     ["greekYogurt",250],["soyNuts",30]
   ]),
   dish("Paneer Tikka Bites", "Snacks", [
-    ["paneer",120],["veggies",60]
+    ["paneer",120],["capsicum",60]
   ]),
   dish("Peanut & Chana Chaat", "Snacks", [
     ["peanuts",30],["chole",40],["onion",30],["tomato",30]
@@ -649,7 +697,7 @@ const DISHES = [
     ["blackChana",40],["almonds",15],["pumpkinSeeds",15]
   ]),
   dish("Hung Curd Fruit Bowl", "Snacks", [
-    ["hungCurd",200],["fruit",80],["flaxSeeds",10]
+    ["hungCurd",200],["guava",80],["flaxSeeds",10]
   ]),
   dish("Tofu Veggie Skewers", "Snacks", [
     ["tofu",150],["capsicum",50],["onion",40]
@@ -658,7 +706,22 @@ const DISHES = [
     ["bread",2],["peanutButter",20],["banana",1]
   ]),
   dish("Cheese & Sprout Cups", "Snacks", [
-    ["sprouts",100],["cheese",30],["tomato",40]
+    ["moongSprouts",100],["cheese",30],["tomato",40]
+  ]),
+  dish("Orange & Almond Yogurt Cup", "Snacks", [
+    ["greekYogurt",200],["orange",1],["almonds",15]
+  ]),
+  dish("Kiwi Protein Smoothie", "Snacks", [
+    ["milk",200],["wheyProtein",25],["kiwi",1]
+  ]),
+  dish("Roasted Edamame Bowl", "Snacks", [
+    ["edamame",120],["capsicum",40]
+  ]),
+  dish("Apple Peanut Butter Slices", "Snacks", [
+    ["apple",1],["peanutButter",20]
+  ]),
+  dish("Walnut Date Energy Bites", "Snacks", [
+    ["walnuts",20],["dates",40],["flaxSeeds",10]
   ])
 ];
 
@@ -774,7 +837,13 @@ function renderDishes(){
   const box = $("dishList");
   box.innerHTML = "";
   box.className = "dish-grid";
-  const list = DISHES.filter(d => d.category === currentCat);
+  const list = DISHES.filter(d => d.category === currentCat && !dishHasSkipped(d));
+
+  if(!list.length){
+    box.className = "";
+    box.innerHTML = '<div class="empty">No dishes available for this category with your current skipped ingredients. Un-skip some on the Ingredients page.</div>';
+    return;
+  }
 
   list.forEach((d, idx) => {
     const card = document.createElement("div");
