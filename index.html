@@ -115,6 +115,8 @@
   .ing.skipped{opacity:.45}
   .ing .name .skip-tag{display:inline-block;background:var(--danger);color:#fff;border-radius:6px;
     font-size:10px;font-weight:700;padding:1px 5px;margin-left:6px;vertical-align:middle}
+  .ing .name .cap-tag{display:inline-block;background:var(--accent);color:#3a2a00;border-radius:6px;
+    font-size:10px;font-weight:700;padding:1px 5px;margin-left:6px;vertical-align:middle}
   .dish-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
   .dish-actions .add{flex:1}
   button{border:0;border-radius:12px;padding:11px 15px;font-size:14px;font-weight:700;cursor:pointer;
@@ -161,6 +163,10 @@
   .ing-table .pp{color:var(--brand);font-weight:700}
   .ing-table tr.row-skipped td{opacity:.45;text-decoration:line-through}
   .ing-table tr.row-skipped td:last-child{opacity:1;text-decoration:none}
+  .ing-table .serve-cap{width:64px;padding:6px 8px;border-radius:9px;text-align:right;
+    display:inline-block;font-size:14px}
+  .ing-table .cap-unit{font-size:11px;color:var(--muted);margin-left:4px}
+  .ing-table tr.row-skipped .serve-cap{text-decoration:none}
   /* week planner */
   .week-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
   .week-table{width:100%;border-collapse:collapse;font-size:13px;min-width:640px}
@@ -289,9 +295,10 @@
       </div>
       <div class="skip-toolbar">
         <button class="btn-ghost" id="skipNone">Clear all skips</button>
+        <button class="btn-ghost" id="capNone">Reset serving sizes</button>
         <span class="small" id="skipCount" style="align-self:center"></span>
       </div>
-      <p class="small">Tick <b>Skip</b> on any ingredient to avoid it — it's switched off in every dish and excluded from all totals &amp; shopping lists.</p>
+      <p class="small">Tick <b>Skip</b> on any ingredient to avoid it — it's switched off in every dish and excluded from all totals &amp; shopping lists. Set a <b>1‑serving max</b> to cap how much of that ingredient any single dish will use (recipes auto‑scale down to your limit). Sensible defaults are pre‑filled for every ingredient — tweak any to your appetite.</p>
       <div class="table-wrap">
         <table class="ing-table">
           <thead>
@@ -299,6 +306,7 @@
               <th>Ingredient</th><th>Per</th>
               <th class="num">Protein</th><th class="num">Calories</th>
               <th class="num">P / 100 kcal</th>
+              <th class="num">1‑serving max</th>
               <th class="num">Skip</th>
             </tr>
           </thead>
@@ -372,37 +380,38 @@
    protein = grams protein, kcal = calories.
 ----------------------------------------------------------------*/
 const ING = {
-  /* --- dairy & paneer/tofu --- */
-  paneer:        { label:"Paneer",              unit:"g",  per:100, protein:18,  kcal:265, grp:"Dairy & Soy" },
-  lowFatPaneer:  { label:"Low-fat paneer",      unit:"g",  per:100, protein:22,  kcal:150, grp:"Dairy & Soy" },
-  tofu:          { label:"Tofu",                unit:"g",  per:100, protein:12,  kcal:120, grp:"Dairy & Soy" },
-  curd:          { label:"Curd / dahi",         unit:"g",  per:100, protein:3.5, kcal:60,  grp:"Dairy & Soy" },
-  greekYogurt:   { label:"Greek yogurt",        unit:"g",  per:100, protein:10,  kcal:97,  grp:"Dairy & Soy" },
+  /* --- dairy & paneer/tofu (Indian brand / IFCT values) --- */
+  paneer:        { label:"Paneer (Amul, full-fat)",unit:"g", per:100, protein:18.3, kcal:296, grp:"Dairy & Soy" },
+  lowFatPaneer:  { label:"Low-fat paneer",      unit:"g",  per:100, protein:20,  kcal:206, grp:"Dairy & Soy" },
+  tofu:          { label:"Tofu (firm)",         unit:"g",  per:100, protein:10,  kcal:120, grp:"Dairy & Soy" },
+  curd:          { label:"Curd / dahi (Amul)",  unit:"g",  per:100, protein:3.1, kcal:60,  grp:"Dairy & Soy" },
+  greekYogurt:   { label:"Greek yogurt (Epigamia)",unit:"g",per:100, protein:9.5, kcal:97,  grp:"Dairy & Soy" },
   hungCurd:      { label:"Hung curd",           unit:"g",  per:100, protein:8,   kcal:98,  grp:"Dairy & Soy" },
-  buttermilk:    { label:"Buttermilk",          unit:"ml", per:100, protein:3,   kcal:40,  grp:"Dairy & Soy" },
-  milk:          { label:"Milk (toned)",        unit:"ml", per:100, protein:3.3, kcal:58,  grp:"Dairy & Soy" },
-  cheese:        { label:"Cheese",              unit:"g",  per:100, protein:25,  kcal:402, grp:"Dairy & Soy" },
+  buttermilk:    { label:"Buttermilk (chaas)",  unit:"ml", per:100, protein:1.8, kcal:38,  grp:"Dairy & Soy" },
+  milk:          { label:"Milk (Amul toned)",   unit:"ml", per:100, protein:3.1, kcal:58,  grp:"Dairy & Soy" },
+  cheese:        { label:"Cheese (Amul processed)",unit:"g",per:100, protein:20,  kcal:310, grp:"Dairy & Soy" },
 
   /* --- soy & legumes (DRY / uncooked) --- */
-  soyaChunks:    { label:"Soya chunks (dry)",   unit:"g",  per:100, protein:52,  kcal:345, grp:"Legumes (dry)" },
-  soyGranules:   { label:"Soya granules (dry)", unit:"g",  per:100, protein:52,  kcal:345, grp:"Legumes (dry)" },
-  moongDal:      { label:"Moong dal (dry)",     unit:"g",  per:100, protein:24,  kcal:347, grp:"Legumes (dry)" },
-  toorDal:       { label:"Toor/arhar dal (dry)",unit:"g",  per:100, protein:22,  kcal:343, grp:"Legumes (dry)" },
-  chanaDal:      { label:"Chana dal (dry)",     unit:"g",  per:100, protein:20,  kcal:360, grp:"Legumes (dry)" },
-  masoorDal:     { label:"Masoor dal (dry)",    unit:"g",  per:100, protein:25,  kcal:352, grp:"Legumes (dry)" },
-  uradDal:       { label:"Urad dal (dry)",      unit:"g",  per:100, protein:25,  kcal:341, grp:"Legumes (dry)" },
-  rajma:         { label:"Rajma (dry)",         unit:"g",  per:100, protein:24,  kcal:333, grp:"Legumes (dry)" },
-  chole:         { label:"Chole/chickpea (dry)",unit:"g",  per:100, protein:19,  kcal:364, grp:"Legumes (dry)" },
-  blackChana:    { label:"Black chana (dry)",   unit:"g",  per:100, protein:19,  kcal:364, grp:"Legumes (dry)" },
+  soyaChunks:    { label:"Soya chunks (Nutrela, dry)",unit:"g",per:100, protein:52,  kcal:345, grp:"Legumes (dry)" },
+  soyGranules:   { label:"Soya granules (Nutrela, dry)",unit:"g",per:100,protein:54, kcal:345, grp:"Legumes (dry)" },
+  moongDal:      { label:"Moong dal (dry)",     unit:"g",  per:100, protein:24.5,kcal:348, grp:"Legumes (dry)" },
+  toorDal:       { label:"Toor/arhar dal (dry)",unit:"g",  per:100, protein:22.3,kcal:335, grp:"Legumes (dry)" },
+  chanaDal:      { label:"Chana dal (dry)",     unit:"g",  per:100, protein:20.8,kcal:360, grp:"Legumes (dry)" },
+  masoorDal:     { label:"Masoor dal (dry)",    unit:"g",  per:100, protein:25.1,kcal:343, grp:"Legumes (dry)" },
+  uradDal:       { label:"Urad dal (dry)",      unit:"g",  per:100, protein:24,  kcal:347, grp:"Legumes (dry)" },
+  rajma:         { label:"Rajma (dry)",         unit:"g",  per:100, protein:22.9,kcal:346, grp:"Legumes (dry)" },
+  chole:         { label:"Chole/chickpea (dry)",unit:"g",  per:100, protein:18.8,kcal:360, grp:"Legumes (dry)" },
+  blackChana:    { label:"Black chana (dry)",   unit:"g",  per:100, protein:17.1,kcal:347, grp:"Legumes (dry)" },
   lobia:         { label:"Lobia/black-eyed (dry)",unit:"g",per:100, protein:24,  kcal:336, grp:"Legumes (dry)" },
   greenPeas:     { label:"Green peas",          unit:"g",  per:100, protein:5,   kcal:81,  grp:"Legumes (dry)" },
   edamame:       { label:"Edamame (soybeans)",  unit:"g",  per:100, protein:11,  kcal:121, grp:"Legumes (dry)" },
   moongSprouts:  { label:"Moong sprouts",       unit:"g",  per:100, protein:9,   kcal:100, grp:"Legumes (dry)" },
 
   /* --- flours & grains --- */
-  besan:         { label:"Besan (gram flour)",  unit:"g",  per:100, protein:22,  kcal:387, grp:"Grains & Flours" },
-  sattu:         { label:"Sattu",               unit:"g",  per:100, protein:20,  kcal:413, grp:"Grains & Flours" },
+  besan:         { label:"Besan (gram flour)",  unit:"g",  per:100, protein:20.8, kcal:387, grp:"Grains & Flours" },
+  sattu:         { label:"Sattu (roasted gram)",unit:"g",  per:100, protein:20.6, kcal:413, grp:"Grains & Flours" },
   oats:          { label:"Oats (dry)",          unit:"g",  per:100, protein:13,  kcal:389, grp:"Grains & Flours" },
+  proteinOats:   { label:"Protein oats (dry)",   unit:"g",  per:100, protein:26,  kcal:364, grp:"Grains & Flours" },
   rice:          { label:"Rice (dry)",          unit:"g",  per:100, protein:7,   kcal:360, grp:"Grains & Flours" },
   poha:          { label:"Poha (flattened rice)",unit:"g", per:100, protein:6.6, kcal:350, grp:"Grains & Flours" },
   semolina:      { label:"Semolina / suji",     unit:"g",  per:100, protein:12,  kcal:360, grp:"Grains & Flours" },
@@ -454,14 +463,47 @@ const ING = {
   dates:         { label:"Dates",               unit:"g",  per:100, protein:2.5, kcal:277, grp:"Fruit" }
 };
 
-/* helper: item = {ing:key, qty:number, on:bool} */
+/* Sensible "1 serving max" default for every ingredient (in its own unit).
+   These pre-fill the serving caps so recipes auto-scale to comfortable
+   single-serving portions out of the box. Users can override any of them. */
+const DEFAULT_SERVE = {
+  /* dairy & soy */
+  paneer:150, lowFatPaneer:150, tofu:150, curd:200, greekYogurt:200, hungCurd:150,
+  buttermilk:250, milk:250, cheese:30,
+  /* legumes (dry) */
+  soyaChunks:60, soyGranules:60, moongDal:80, toorDal:80, chanaDal:80, masoorDal:80,
+  uradDal:80, rajma:80, chole:80, blackChana:80, lobia:80, greenPeas:100,
+  edamame:120, moongSprouts:120,
+  /* grains & flours */
+  besan:80, sattu:60, oats:60, proteinOats:60, rice:65, poha:70, semolina:70,
+  quinoa:70, dalia:70, ragi:70, wheatFlour:80, roti:2, bread:2,
+  /* nuts, seeds & boosters */
+  peanuts:20, peanutButter:20, almonds:15, walnuts:15, cashews:15, chiaSeeds:15,
+  pumpkinSeeds:20, flaxSeeds:15, soyNuts:30, makhana:40, wheyProtein:30,
+  soyProtein:30, egg:3, eggWhite:6,
+  /* vegetables */
+  spinach:150, broccoli:150, mushroom:150, kale:100, brusselsSprout:100, fenugreek:100,
+  cauliflower:150, capsicum:100, tomato:100, onion:80, carrot:100, bottleGourd:150,
+  sweetPotato:150,
+  /* fruit */
+  guava:150, berries:100, orange:1, kiwi:2, banana:1, apple:1, dates:30
+};
+
+/* helper: item = {ing:key, qty:number, on:bool}
+   A per-ingredient "serving cap" (set on the Ingredient guide) limits how
+   much of that ingredient is used in ANY single dish. If a recipe asks for
+   more than you can eat in one serving, it's automatically scaled down. */
+function effQty(item){
+  const cap = (typeof serving !== "undefined") ? serving[item.ing] : null;
+  return (cap != null && cap > 0) ? Math.min(item.qty, cap) : item.qty;
+}
 function ingProtein(item){
   const d = ING[item.ing]; if(!d) return 0;
-  return d.protein * (item.qty / d.per);
+  return d.protein * (effQty(item) / d.per);
 }
 function ingKcal(item){
   const d = ING[item.ing]; if(!d) return 0;
-  return d.kcal * (item.qty / d.per);
+  return d.kcal * (effQty(item) / d.per);
 }
 
 /* ---------------------------------------------------------------
@@ -539,6 +581,47 @@ const DISHES = [
   ]),
   dish("Tofu Kale Scramble + Toast", "Breakfast", [
     ["tofu",200],["kale",80],["bread",2],["onion",30]
+  ]),
+  /* --- egg-forward breakfasts (Mon / Wed / Fri / Sun) --- */
+  dish("Bread Omelette (3 egg)", "Breakfast", [
+    ["egg",3],["bread",2],["onion",40],["tomato",50]
+  ]),
+  dish("Bread Omelette + Cheese", "Breakfast", [
+    ["egg",3],["bread",2],["cheese",20],["capsicum",50]
+  ]),
+  dish("Egg White Veggie Omelette + Toast", "Breakfast", [
+    ["eggWhite",6],["bread",2],["capsicum",60],["mushroom",60]
+  ]),
+  dish("Masala Omelette + Roti", "Breakfast", [
+    ["egg",3],["roti",2],["onion",40],["fenugreek",40]
+  ]),
+  dish("Boiled Eggs + Toast + Milk", "Breakfast", [
+    ["egg",3],["bread",2],["milk",200]
+  ]),
+  dish("Egg Bhurji Toast + Curd", "Breakfast", [
+    ["egg",3],["bread",2],["onion",40],["curd",150]
+  ]),
+  dish("Spinach Cheese Omelette + Toast", "Breakfast", [
+    ["egg",3],["spinach",80],["cheese",20],["bread",2]
+  ]),
+  /* --- protein-oats breakfasts (26 g / 100 g, 364 kcal) --- */
+  dish("Protein Oats Bowl + Milk", "Breakfast", [
+    ["proteinOats",60],["milk",200],["banana",1]
+  ]),
+  dish("Protein Oats + Greek Yogurt", "Breakfast", [
+    ["proteinOats",60],["greekYogurt",150],["berries",80]
+  ]),
+  dish("Savoury Masala Protein Oats", "Breakfast", [
+    ["proteinOats",60],["greenPeas",40],["capsicum",50],["peanuts",10]
+  ]),
+  dish("Protein Oats + Egg Whites", "Breakfast", [
+    ["proteinOats",50],["eggWhite",4],["milk",150]
+  ]),
+  dish("Peanut Butter Protein Oats", "Breakfast", [
+    ["proteinOats",60],["peanutButter",15],["milk",200]
+  ]),
+  dish("Protein Oats Overnight Jar", "Breakfast", [
+    ["proteinOats",60],["greekYogurt",150],["chiaSeeds",10],["apple",1]
   ]),
 
   /* ---------- LUNCH ---------- */
@@ -731,6 +814,7 @@ const DISHES = [
 let currentCat = "Breakfast";
 let plan = [];   // array of dish objects (deep copies) added to the day
 let skipped = new Set();   // ingredient keys the user wants to avoid
+let serving = {...DEFAULT_SERVE};   // ingredient key -> max qty you can eat in one serving
 let usePhotos = true;      // show real photos (fallback to emoji thumbnails)
 const DAYS = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 const SLOTS = ["Breakfast","Lunch","Dinner","Snacks"];
@@ -882,14 +966,16 @@ function renderDishes(){
       const isSkipped = skipped.has(item.ing);
       const rowP = ingActive(item) ? ingProtein(item) : 0;
       const rowC = ingActive(item) ? ingKcal(item) : 0;
+      const capped = serving[item.ing] != null && item.qty > serving[item.ing];
+      const shownQty = capped ? serving[item.ing] : item.qty;
       const row = document.createElement("div");
       row.className = "ing" + (item.on ? "" : " off") + (isSkipped ? " skipped" : "");
       row.innerHTML = `
         <input type="checkbox" ${item.on ? "checked" : ""} ${isSkipped ? "disabled" : ""} />
-        <div class="name">${meta.label}${isSkipped ? '<span class="skip-tag">skipped</span>' : ''}
+        <div class="name">${meta.label}${isSkipped ? '<span class="skip-tag">skipped</span>' : ''}${capped ? `<span class="cap-tag" title="Recipe wants ${item.qty}${meta.unit}, capped to your ${serving[item.ing]}${meta.unit} serving">1× ${serving[item.ing]}${meta.unit}</span>` : ''}
           <small>${round(rowP)}g protein · per ${meta.per}${meta.unit}</small>
         </div>
-        <input type="number" min="0" step="5" value="${item.qty}" ${isSkipped ? "disabled" : ""} />
+        <input type="number" min="0" step="5" value="${shownQty}" ${isSkipped ? "disabled" : ""} />
         <div class="kcal">${round(rowC)} kcal</div>
       `;
       const chk = row.querySelector('input[type=checkbox]');
@@ -945,7 +1031,7 @@ function renderPlan(){
 
   plan.forEach((d, idx) => {
     const activeIng = d.ingredients.filter(i => ingActive(i))
-      .map(i => `${ING[i.ing].label} ${i.qty}${ING[i.ing].unit}`).join(" · ");
+      .map(i => `${ING[i.ing].label} ${effQty(i)}${ING[i.ing].unit}`).join(" · ");
     const item = document.createElement("div");
     item.className = "day-item";
     item.innerHTML = `
@@ -994,6 +1080,7 @@ function save(){
     localStorage.setItem("proteinDietPlan", JSON.stringify({
       plan,
       skipped:Array.from(skipped),
+      serving,
       week,
       usePhotos,
       proteinTarget:$("proteinTarget").value,
@@ -1008,7 +1095,10 @@ function load(){
     const s = JSON.parse(raw);
     if(Array.isArray(s.plan)) plan = s.plan.filter(d => d && Array.isArray(d.ingredients));
     if(Array.isArray(s.skipped)) skipped = new Set(s.skipped.filter(k => ING[k]));
-    if(Array.isArray(s.week) && s.week.length === 7){
+    if(s.serving && typeof s.serving === "object"){
+      serving = {};
+      Object.entries(s.serving).forEach(([k,v]) => { if(ING[k] && v > 0) serving[k] = v; });
+    }    if(Array.isArray(s.week) && s.week.length === 7){
       week = s.week.map(day => ({
         Breakfast: day.Breakfast || "", Lunch: day.Lunch || "",
         Dinner: day.Dinner || "", Snacks: day.Snacks || ""
@@ -1020,7 +1110,7 @@ function load(){
       usePhotos = s.usePhotos;
       $("photoToggle").checked = usePhotos;
     }
-  }catch(e){ plan = []; skipped = new Set(); }
+  }catch(e){ plan = []; skipped = new Set(); serving = {...DEFAULT_SERVE}; }
 }
 
 /* ---------------------------------------------------------------
@@ -1057,6 +1147,7 @@ function renderIngTable(){
     .forEach(([key, d]) => {
       const pPer100 = (d.protein / d.kcal) * 100;
       const isSkipped = skipped.has(key);
+      const cap = serving[key];
       const tr = document.createElement("tr");
       if(isSkipped) tr.classList.add("row-skipped");
       tr.innerHTML = `
@@ -1065,8 +1156,20 @@ function renderIngTable(){
         <td class="num">${d.protein} g</td>
         <td class="num">${d.kcal} kcal</td>
         <td class="num pp">${pPer100.toFixed(1)} g</td>
+        <td class="num"><input type="number" class="serve-cap" min="0" step="${d.unit==='g'||d.unit==='ml'?5:1}"
+              placeholder="—" value="${cap!=null?cap:''}" title="Max ${d.unit} per serving" /><span class="cap-unit">${d.unit}</span></td>
         <td class="num"><input type="checkbox" class="skip-chk" ${isSkipped ? "checked" : ""} /></td>
       `;
+      tr.querySelector(".serve-cap").addEventListener("input", e => {
+        const v = Number(e.target.value);
+        if(e.target.value === "" || v <= 0) delete serving[key];
+        else serving[key] = v;
+        save();
+        renderDishes();
+        renderPlan();
+        renderWeek();
+        updateStats();
+      });
       tr.querySelector(".skip-chk").addEventListener("change", e => {
         if(e.target.checked) skipped.add(key); else skipped.delete(key);
         save();
@@ -1159,7 +1262,7 @@ function weeklyIngredients(){
     if(!d) return;
     d.ingredients.forEach(i => {
       if(!ingActive(i)) return;
-      totals[i.ing] = (totals[i.ing] || 0) + i.qty;
+      totals[i.ing] = (totals[i.ing] || 0) + effQty(i);
     });
   }));
   return totals;
@@ -1255,7 +1358,7 @@ function downloadPdf(){
       doc.text(`${round(dishProtein(d))}g P • ${round(dishKcal(d))} kcal`, pageW - margin - 6, y, { align:"right" });
       line(14);
       const ings = d.ingredients.filter(i => ingActive(i))
-        .map(i => `${ING[i.ing].label} ${i.qty}${ING[i.ing].unit}`).join(", ");
+        .map(i => `${ING[i.ing].label} ${effQty(i)}${ING[i.ing].unit}`).join(", ");
       doc.setFontSize(9); doc.setTextColor(110);
       const wrapped = doc.splitTextToSize(ings, pageW - margin*2 - 16);
       wrapped.forEach(w => { doc.text(w, margin + 16, y); line(12); });
@@ -1353,6 +1456,11 @@ $("themeToggle").addEventListener("click", () => {
 
 $("skipNone").addEventListener("click", () => {
   skipped.clear(); save();
+  renderIngTable(); renderDishes(); renderPlan(); renderWeek(); updateStats();
+});
+
+$("capNone").addEventListener("click", () => {
+  serving = {...DEFAULT_SERVE}; save();
   renderIngTable(); renderDishes(); renderPlan(); renderWeek(); updateStats();
 });
 
